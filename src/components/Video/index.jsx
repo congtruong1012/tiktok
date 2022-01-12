@@ -98,6 +98,7 @@ function Video(props) {
           max="100"
           value={volume}
           onChange={handleChangeVolume}
+          onClick={() => console.log(volume)}
           ref={volumeRef}
         />
       </div>
