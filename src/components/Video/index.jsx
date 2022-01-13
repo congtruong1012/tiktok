@@ -19,8 +19,8 @@ function Video(props) {
 
   const isShow = useViewPort(ref, {
     root: null,
-    rootMargin: "0px",
-    threshold: 0.45,
+    rootMargin: "-10%",
+    threshold: 0.6,
   });
 
   const handleChange = () => {
@@ -59,11 +59,17 @@ function Video(props) {
 
   useEffect(() => {
     if (ref.current && isShow) {
-      ref.current.play();
-      setIsPlaying(true);
+      if (!isPlaying) {
+        ref.current.muted = true;
+        ref.current.play();
+        ref.current.muted = false;
+        setIsPlaying(true);
+      }
     } else {
-      ref.current.pause();
-      setIsPlaying(false);
+      if (isPlaying) {
+        setIsPlaying(false);
+        ref.current.pause();
+      }
     }
   }, [isShow]);
 

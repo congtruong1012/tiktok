@@ -4,7 +4,7 @@ function Video(props) {
   const videos = [
     {
       avatar:
-        "https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/7e5186eb59cfca195f6841ad3010f16c.jpeg?x-expires=1641819600&x-signature=Ctud3L%2BpdpFeR1q7zCpUJLfzDHA%3D",
+        "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/troll.png?alt=media&token=c84079f3-f71f-4266-b3d9-b7a69137d22e",
       user: "my0599",
       dateCreated: "2021-01-01",
       desc: "Dòng người vộ vàng bước qua... ######",
@@ -14,7 +14,7 @@ function Video(props) {
     },
     {
       avatar:
-        "https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/063e1dea881b689033e9af8a5503b14d.jpg?x-expires=1641906000&x-signature=i6UpvHZADMVya4vAvd%2BNVgEqG94%3D",
+        "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/thumb.webp?alt=media&token=ea45894c-dec5-41d6-9fff-ba0497ea198a",
       user: "thuychioffical",
       dateCreated: "2021-12-10",
       desc: "Có nhau trọn đời - Thuỳ Chi #thuychi #thuychiofficial #NhacHayMoiNgay",
@@ -24,7 +24,7 @@ function Video(props) {
     },
     {
       avatar:
-        "https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-aiso/5d7f5520ca1074c38c55f77a13cd756a~c5_100x100.jpeg?x-expires=1641819600&x-signature=NbcgpEiGKBr8miAxxi6Q%2BX0d8GM%3D",
+        "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/HAT.jpg?alt=media&token=0d364907-34dd-4b29-8cf7-3f460d54c849",
       user: "lii.musik",
       dateCreated: "1 day ago",
       desc: "Tôi có một chén rượu để xoa dịu hồng trần.",

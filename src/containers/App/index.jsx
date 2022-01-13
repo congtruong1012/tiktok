@@ -14,7 +14,6 @@ function App() {
     const unregisterAuthObserver = firebase
       .auth()
       .onAuthStateChanged(async (user) => {
-        console.log('.onAuthStateChanged ~ user', user)
         if (user) {
           const token = await user.getIdToken();
           localStorage.setItem("token", token);

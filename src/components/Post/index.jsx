@@ -27,7 +27,7 @@ function Post(props) {
   return (
     <div className="flex justify-between py-5 border-b">
       <div className="w-20">
-        <img src={avatar} alt="user" className="w-16 h-16 rounded-full" />
+        <img src={avatar} alt="user" className="w-16 h-16 rounded-full object-cover" />
       </div>
       <div className="px-2">
         <a href="/" className="flex items-center">

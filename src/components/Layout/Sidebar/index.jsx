@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import IconFollow from "../../../icons/IconFollow";
 import IconHome from "../../../icons/IconHome";
 import IconLive from "../../../icons/IconLive";
+import Discover from "../../Discover";
+import FollowingAccount from "../../FollowingAccount";
+import SuggestAccount from "../../SuggestAccount";
 
 function Sidebar() {
   const navbar = [
@@ -25,7 +28,7 @@ function Sidebar() {
 
   return (
     <div className="py-2">
-      <ul className="py-2 border-b">
+      <ul className="py-2 border-b border-gray-100 border-solid">
         {navbar.map((item, index) => (
           <li className="hover:bg-slate-50 p-2" key={item.label}>
             <Link to={item.link} className="flex items-center">
@@ -47,6 +50,10 @@ function Sidebar() {
           </li>
         ))}
       </ul>
+      <SuggestAccount />
+      <FollowingAccount />
+      <Discover />
+      <div className="text-sm text-gray-400 text-center my-2">© 2022 TikTok</div>
     </div>
   );
 }
