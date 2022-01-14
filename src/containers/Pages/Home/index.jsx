@@ -5,7 +5,7 @@ import Video from "../../Features/Video";
 
 function Home() {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto h-full">
       <Header />
       <div className="flex">
         <div className="w-[356px]">

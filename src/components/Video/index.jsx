@@ -75,7 +75,7 @@ function Video(props) {
 
   return (
     <div className="relative video">
-      <video loop src={post} ref={ref}>
+      <video loop src={post} ref={ref} className="">
         {/* <source src={post} /> */}
       </video>
       <span
