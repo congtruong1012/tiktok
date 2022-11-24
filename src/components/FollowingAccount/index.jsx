@@ -25,15 +25,13 @@ function FollowingAccount() {
   }, []);
   return (
     <Widget title=" Following accounts" text="See more">
-      <ul className="px-2 ">
+      <div className="px-2 ">
         {isLoading
           ? [1, 2].map((item) => <LoadingUser key={String(item)} />)
           : users.map((user) => (
-              <li className="p-2">
-                <User key={String(user?.id || 0)} user={user} />
-              </li>
+              <User key={String(user?.id || 0)} user={user} />
             ))}
-      </ul>
+      </div>
     </Widget>
   );
 }

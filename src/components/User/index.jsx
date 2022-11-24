@@ -4,7 +4,7 @@ import IconVerified from "../../icons/IconVerified";
 function User(props) {
   const { user } = props;
   return (
-    <div className="flex items-center cursor-pointer">
+    <div className="flex items-center cursor-pointer hover:bg-gray-50 py-2 px-2">
       <div className="h-9 w-9 overflow-hidden rounded-full mr-3">
         <img
           // src="https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/thumb.webp?alt=media&token=ea45894c-dec5-41d6-9fff-ba0497ea198a"

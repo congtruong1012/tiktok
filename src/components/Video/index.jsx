@@ -82,7 +82,7 @@ function Video(props) {
         onClick={handleChange}
         className="absolute z-10 left-5 bottom-4 cursor-pointer control"
       >
-        {isPlaying ? (
+        {!isPlaying ? (
           <IconPlay className="w-7 h-7 text-white" />
         ) : (
           <IconPause className="w-7 h-7 text-white" />

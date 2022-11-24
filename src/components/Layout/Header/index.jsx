@@ -1,3 +1,5 @@
+import Tippy from "@tippyjs/react";
+import firebase from "firebase/compat/app";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +9,7 @@ import IconSearch from "../../../icons/IconSearch";
 import IconSend from "../../../icons/IconSend";
 import IconUpload from "../../../icons/IconUpload";
 import IconUser from "../../../icons/IconUser";
-import firebase from "firebase/compat/app";
+import Search from "../../Search";
 
 function Header() {
   const nav = useNavigate();
@@ -34,16 +36,7 @@ function Header() {
               <img src="https://sf16-scmcdn-sg.ibytedtos.com/goofy/tiktok/web/node/_next/static/images/logo-whole-c555aa707602e714ec956ac96e9db366.svg" />
             </Link>
           </div>
-          <div className="w-1/3 relative">
-            <input
-              placeholder="Search accounts and videos"
-              type="text"
-              className="w-full border-none rounded-3xl outline-none bg-gray-100 px-4 py-2"
-            />
-            <button className="absolute border-l rounded-tr-3xl rounded-br-3xl hover:bg-gray-200 px-4 py-2 border-gray-400 right-0 top-1/2 -translate-y-1/2">
-              <IconSearch />
-            </button>
-          </div>
+          <Search />
           <div className="w-48">
             {isLogin ? (
               <div className="flex items-center justify-between">
