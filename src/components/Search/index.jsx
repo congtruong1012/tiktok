@@ -1,36 +1,53 @@
+import { useQuery } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import useDebounce from "../../hooks/useDebounce";
+import IconCircleXMark from "../../icons/IconCircleXMark";
 import IconSearch from "../../icons/IconSearch";
+import IconSpinner from "../../icons/IconSpinner";
 import Scrollbar from "../Layout/Scrollbar";
+import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import User from "../User";
-
+import { search } from "../../services/searchService";
 function Search(props) {
-  const ref = useRef();
+  // const ref = useRef();
+  const [keySearch, setKeySearch] = useState("");
+  const searchDebounce = useDebounce(keySearch);
+
+  const { isFetching, data } = useQuery({
+    queryKey: ["search", { searchDebounce }],
+    queryFn: () => search(searchDebounce),
+    enabled: !!searchDebounce,
+  });
+
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(data?.length > 0);
+  }, [data]);
+
   return (
     <>
       <div className="w-1/3 relative">
         <Tippy
           visible={open}
           content={
-            <Scrollbar className={`w-[350px] h-[300px] bg-white shadow-md`}>
+            <Scrollbar className={`w-[350px] min-h-[300px] bg-white shadow-md`}>
               <div className="p-2">
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <User user={{ id: 3, name: "Cong", username: "congtruong" }} />
-                <div className="animate-pulse flex items-center cursor-pointer hover:bg-gray-50 py-2 px-2">
-                  <div className="h-11 w-11 bg-slate-100 rounded-full mr-3"></div>
-                  <div className="flex-grow">
-                    <div className="text-base text-gray-600 font-bold flex">
-                      <span className="relative"></span>
-                    </div>
-                    <div className="text-xs text-gray-400 py-0"></div>
-                  </div>
-                </div>
+                {isFetching ? (
+                  <>
+                    <SkeletonUser />
+                    <SkeletonUser />
+                    <SkeletonUser />
+                  </>
+                ) : (
+                  <>
+                    {data?.map((item) => (
+                      <User user={item} key={item?.id} />
+                    ))}
+                  </>
+                )}
               </div>
             </Scrollbar>
           }
@@ -41,18 +58,26 @@ function Search(props) {
             placeholder="Search accounts and videos"
             type="text"
             className="w-full border-none rounded-3xl outline-none bg-gray-100 px-4 py-2"
-            ref={ref}
+            value={keySearch}
             onChange={(e) => {
               const { value } = e.target;
-              if (value) {
-                if (!open) setOpen(true);
-              } else {
-                if (open) setOpen(false);
+              setKeySearch(value);
+              if (!value) {
+                setOpen(false);
               }
             }}
-            onFocus={(e) => e.target.value && setOpen(true)}
+            onFocus={(e) => e.target.value && data?.length > 0 && setOpen(true)}
           />
         </Tippy>
+        {keySearch &&
+          (isFetching ? (
+            <IconSpinner className="absolute animate-spinner top-1/2 right-[70px] -translate-y-1/2 w-3 h-3 bg-gray-200" />
+          ) : (
+            <IconCircleXMark
+              className="absolute top-1/2 right-[70px] -translate-y-1/2 w-3 h-3 bg-gray-200"
+              onClick={() => setKeySearch("")}
+            />
+          ))}
         <button className="absolute border-l rounded-tr-3xl rounded-br-3xl hover:bg-gray-200 px-4 py-2 border-gray-400 right-0 top-1/2 -translate-y-1/2">
           <IconSearch />
         </button>

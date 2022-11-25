@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import Widget from "../Layout/Widget";
 import User from "../User";
-import LoadingUser from "../User/LoadingUser";
 
 function FollowingAccount() {
   const [users, setUsers] = useState([]);
@@ -27,7 +27,7 @@ function FollowingAccount() {
     <Widget title=" Following accounts" text="See more">
       <div className="px-2 ">
         {isLoading
-          ? [1, 2].map((item) => <LoadingUser key={String(item)} />)
+          ? [1, 2].map((item) => <SkeletonUser key={String(item)} />)
           : users.map((user) => (
               <User key={String(user?.id || 0)} user={user} />
             ))}
