@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
+import HoverCard from "../../containers/HOCs/HoverCard";
 import { suggestAccounts } from "../../services/suggestAccounts";
 import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import Widget from "../Layout/Widget";
@@ -12,7 +13,7 @@ function SuggestAccount() {
       queryFn: ({ pageParam = 1 }) => suggestAccounts(pageParam),
       getNextPageParam: (params) => {
         const { current_page, total_pages } = params?.meta?.pagination || {};
-        return current_page <= total_pages ? current_page + 1 : undefined;
+        return current_page < total_pages ? current_page + 1 : undefined;
       },
     });
   return (
@@ -26,7 +27,13 @@ function SuggestAccount() {
           ? [1, 2, 3].map((item) => <SkeletonUser key={String(item)} />)
           : data.pages.map((page) =>
               page?.data?.map((user) => (
-                <User key={String(user?.id || 0)} user={user} />
+                <HoverCard
+                  Component={User}
+                  key={String(user?.id || 0)}
+                  user={user}
+                  userId={user?.nickname}
+                />
+                // <User key={String(user?.id || 0)} user={user} />
               ))
             )}
         {isFetchingNextPage && <SkeletonUser />}

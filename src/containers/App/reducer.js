@@ -13,12 +13,17 @@ const appSlice = createSlice({
   initialState: {
     isLogin: false,
     user: {},
-    isLoading: false,
+    isLoading: true,
   },
   reducers: {
     checkToken: (state, action) => {
-      state.user = action.payload;
-      state.isLogin = true;
+      state.user = action.payload.data;
+      state.isLogin = action.payload.isLogin;
+      state.isLoading = false;
+    },
+    logout: (state) => {
+      state.user = {};
+      state.isLogin = false;
     },
   },
   // extraReducers: (builder) => {
@@ -31,7 +36,7 @@ const appSlice = createSlice({
 });
 
 const { reducer, actions } = appSlice;
-const { checkToken } = actions;
-export { checkToken };
+const { checkToken, logout } = actions;
+export { checkToken, logout };
 
 export default reducer;

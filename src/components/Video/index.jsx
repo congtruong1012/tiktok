@@ -8,7 +8,7 @@ import IconUnmute from "../../icons/IconUnmute";
 
 function Video(props) {
   const { video } = props;
-  const { post } = video;
+  // const { post } = video;
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0);
@@ -75,7 +75,7 @@ function Video(props) {
 
   return (
     <div className="relative video">
-      <video loop src={post} ref={ref} className="">
+      <video loop src={video?.file_url} ref={ref} className="">
         {/* <source src={post} /> */}
       </video>
       <span

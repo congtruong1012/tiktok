@@ -1,26 +1,26 @@
-import Tippy from "@tippyjs/react";
 import firebase from "firebase/compat/app";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { logout } from "../../../containers/App/reducer";
+import { AuthLogin } from "../../../containers/HOCs/AuthLogin";
 import IconLogout from "../../../icons/IconLogout";
 import IconMessage from "../../../icons/IconMessage";
-import IconSearch from "../../../icons/IconSearch";
 import IconSend from "../../../icons/IconSend";
 import IconUpload from "../../../icons/IconUpload";
 import IconUser from "../../../icons/IconUser";
 import Search from "../../Search";
+import Image from "../Image";
 
 function Header() {
-  const nav = useNavigate();
-
   const isLogin = useSelector((state) => state.app.isLogin);
   const user = useSelector((state) => state.app.user);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     firebase.auth().signOut();
-    nav("/login");
+    dispatch(logout());
   };
 
   return (
@@ -44,7 +44,7 @@ function Header() {
                 <IconSend className="w-8 h-8 cursor-pointer" />
                 <IconMessage className="w-8 h-8 cursor-pointer" />
                 <div className="relative w-8 h-8 cursor-pointer avatar">
-                  <img
+                  <Image
                     src={user?.avatar}
                     alt="avt"
                     className="h-full w-full rounded-full "
@@ -79,12 +79,13 @@ function Header() {
                 <a href="#" className="text-base font-bold">
                   Upload
                 </a>
-                <Link
-                  to="/login"
+                <AuthLogin
+                  Component="button"
                   className="rounded ml-2 bg-primary py-2 px-8 text-white"
+                  onClick={() => console.log("Oke na")}
                 >
-                  Login
-                </Link>
+                  <span>Login</span>
+                </AuthLogin>
               </div>
             )}
           </div>

@@ -1,36 +1,36 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { followAccounts } from "../../services/followAccount";
 import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import Widget from "../Layout/Widget";
 import User from "../User";
 
 function FollowingAccount() {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading((prev) => !prev);
-    const timeout = setTimeout(() => {
-      axios
-        .get("https://jsonplaceholder.typicode.com/users", {
-          params: { _limit: 5, _page: 2 },
-        })
-        .then((res) => res.data)
-        .then((data) => {
-          setLoading((prev) => !prev);
-          setUsers(data);
-        });
-    }, [1000]);
-    return () => clearTimeout(timeout);
-  }, []);
+  const { isLoading, isFetchingNextPage, hasNextPage, data, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["following-account"],
+      queryFn: ({ pageParam }) => followAccounts(pageParam),
+      getNextPageParam: (params) => {
+        const { current_page, total_pages } = params?.meta?.pagination || {};
+        return current_page < total_pages ? current_page + 1 : undefined;
+      },
+    });
   return (
-    <Widget title=" Following accounts" text="See more">
+    <Widget
+      title=" Following accounts"
+      text={hasNextPage ? "See more" : ""}
+      onClickText={fetchNextPage}
+    >
       <div className="px-2 ">
         {isLoading
-          ? [1, 2].map((item) => <SkeletonUser key={String(item)} />)
-          : users.map((user) => (
-              <User key={String(user?.id || 0)} user={user} />
-            ))}
+          ? [1, 2, 3].map((item) => <SkeletonUser key={String(item)} />)
+          : data?.pages.map((page) =>
+              page?.data?.map((user) => (
+                <User key={String(user?.id || 0)} user={user} />
+              ))
+            )}
+        {isFetchingNextPage && <SkeletonUser />}
       </div>
     </Widget>
   );

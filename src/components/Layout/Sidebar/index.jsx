@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import IconFollow from "../../../icons/IconFollow";
 import IconHome from "../../../icons/IconHome";
 import IconLive from "../../../icons/IconLive";
@@ -18,14 +19,16 @@ function Sidebar() {
     {
       icon: IconFollow,
       label: "Following",
-      link: "/",
+      link: "/following",
     },
     {
       icon: IconLive,
       label: "Live",
-      link: "/",
+      link: "/live",
     },
   ];
+  const {pathname} = useLocation()
+  const isLogin = useSelector((state) => state.app.isLogin);
 
   return (
     <div className="sticky top-16 h-[calc(100vh-64px)]">
@@ -36,14 +39,14 @@ function Sidebar() {
               <Link to={item.link} className="flex items-center">
                 <item.icon
                   fill={
-                    index === 0
+                    pathname === item?.link
                       ? "rgba(254, 44, 85, 1.0)"
                       : "rgba(22, 24, 35, 1.0)"
                   }
                 />
                 <span
                   className={`ml-2 text-lg font-bold ${
-                    index === 0 ? "text-primary" : "text-black"
+                    pathname === item?.link ? "text-primary" : "text-black"
                   }`}
                 >
                   {item.label}
@@ -53,7 +56,7 @@ function Sidebar() {
           ))}
         </ul>
         <SuggestAccount />
-        <FollowingAccount />
+        {isLogin && <FollowingAccount />}
         <Discover />
         <div className="text-sm text-gray-400 text-center py-4">
           © 2022 TikTok

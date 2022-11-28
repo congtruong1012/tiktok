@@ -1,45 +1,52 @@
-import React from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import Post from "../../../components/Post";
+import { video } from "../../../services/videoService";
 function Video(props) {
-  const videos = [
-    {
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/troll.png?alt=media&token=c84079f3-f71f-4266-b3d9-b7a69137d22e",
-      user: "my0599",
-      dateCreated: "2021-01-01",
-      desc: "Con này nó rất láo…",
-      post: "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/download.mp4?alt=media&token=01d89254-0cd8-4fb3-8441-fa77879c09b7",
-      like: "50",
-      comment: "20",
-    },
-    // {
-    //   avatar:
-    //     "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/thumb.webp?alt=media&token=ea45894c-dec5-41d6-9fff-ba0497ea198a",
-    //   user: "thuychioffical",
-    //   dateCreated: "2021-12-10",
-    //   desc: "Nước mắt em lau bằng tình yêu mới - Thuỳ Chi\n#thuychi #thuychiofficial #NhacHayMoiNgay",
-    //   post: "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/TC.mp4?alt=media&token=db559dea-1fa4-4b65-8c9b-36fa6674d708",
-    //   like: "19.5k",
-    //   comment: "235",
-    // },
-    {
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/HAT.jpg?alt=media&token=0d364907-34dd-4b29-8cf7-3f460d54c849",
-      user: "lii.musik",
-      dateCreated: "1 day ago",
-      desc: "Tôi có một chén rượu để xoa dịu hồng trần.",
-      post: "https://firebasestorage.googleapis.com/v0/b/authentication-f9b30.appspot.com/o/HAT.mp4?alt=media&token=8604a062-d9e6-499e-906f-4f59d951e12d",
-      like: "233",
-      comment: "4",
-    },
-  ];
+  const { type } = props;
+  const { ref, inView } = useInView();
+  const { isLoading, isFetchingNextPage, hasNextPage, data, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ["videos"],
+      queryFn: ({ pageParams = 1 }) => video(pageParams, type),
+      getNextPageParam: (params) => {
+        const { current_page, total_pages } = params?.meta?.pagination || {};
+        return current_page < total_pages ? current_page + 1 : undefined;
+      },
+    });
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage]);
 
   return (
-    <>
-      {videos.map((video, i) => (
-        <Post key={String(i)} video={video} />
-      ))}
-    </>
+    <div>
+      {isLoading ? (
+        <div>
+          <div className="flex flex-wrap">
+            <div className="animate-pulse bg-gray-200 w-14 h-14 rounded-full overflow-hidden mr-2"></div>
+            <div className="flex-grow">
+              <div className="animate-pulse bg-gray-200 w-[100px] h-3 rounded-lg"></div>
+              <div className="animate-pulse bg-gray-200 w-[200px] h-3 rounded-lg mt-2"></div>
+              <div className="animate-pulse bg-gray-200 w-[150px] h-3 rounded-lg mt-2"></div>
+              <div className="mt-4 animate-pulse w-[320px] h-[400px] bg-gray-200 "></div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {data?.pages?.map((page) => {
+            return page?.data?.map((video) => (
+              <Post key={String(video?.id)} video={video} />
+            ));
+          })}
+        </>
+      )}
+      <div ref={ref}></div>
+    </div>
   );
 }
 

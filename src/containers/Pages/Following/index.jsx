@@ -4,12 +4,12 @@ import Header from "../../../components/Layout/Header";
 import Sidebar from "../../../components/Layout/Sidebar";
 import Video from "../../Features/Video";
 
-function Home() {
+function Following() {
   return (
     <CommonLayout>
-      <Video type="for-you" />
+      <Video type="following" />
     </CommonLayout>
   );
 }
 
-export default Home;
+export default Following;

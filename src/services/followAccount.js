@@ -1,11 +1,10 @@
 import httpRequest from "../utils/httpRequest";
 
-export const suggestAccounts = async (page, per_page = 5) => {
+export const followAccounts = async (page) => {
   try {
-    const res = await httpRequest.get("users/suggested", {
+    const res = await httpRequest.get("me/followings", {
       params: {
         page,
-        per_page,
       },
     });
     return res.data;
