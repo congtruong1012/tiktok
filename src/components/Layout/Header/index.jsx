@@ -75,13 +75,16 @@ function Header() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center">
-                <a href="#" className="text-base font-bold">
+              <div className="flex items-center space-x-4">
+                <a
+                  href="#"
+                  className="rounded py-1.5 px-6 text-base font-semibold border border-solid border-gray-300"
+                >
                   Upload
                 </a>
                 <AuthLogin
                   Component="button"
-                  className="rounded ml-2 bg-primary py-2 px-8 text-white"
+                  className="rounded ml-2 bg-primary py-1.5 px-6 text-white font-semibold"
                   onClick={() => console.log("Oke na")}
                 >
                   <span>Login</span>
