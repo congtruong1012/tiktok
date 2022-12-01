@@ -10,6 +10,7 @@ import { getCurrentUser } from "../../services/authService";
 import Following from "../Pages/Following";
 import Home from "../Pages/Home";
 import Login from "../Pages/Login";
+import Profile from "../Pages/Profile";
 import { checkToken } from "./reducer";
 
 function App() {
@@ -76,6 +77,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/following" element={<Following />} />
+            <Route path="/profile/:id" element={<Profile />} />
             <Route
               path="*"
               element={

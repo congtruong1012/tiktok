@@ -11,7 +11,7 @@ function CommonLayout(props) {
           <Sidebar />
         </div>
         <div className="flex-grow">
-          <div className="px-6 py-2">{props.children}</div>
+          <div className="px-6 py-4">{props.children}</div>
         </div>
       </div>
     </div>
