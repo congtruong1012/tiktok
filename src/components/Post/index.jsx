@@ -103,7 +103,10 @@ function Post(props) {
                   className="block mx-auto rounded-full p-3 text-center bg-slate-100"
                   onClick={() => console.log("Oke na")}
                 >
-                  <item.icon className="w-6 h-6" />
+                  <item.icon
+                    className={`w-6 h-6`}
+                    fill={item.num === "Share" ? '#000' : undefined}
+                  />
                 </AuthLogin>
                 <div className="text-sm font-bold mt-1">{item.num}</div>
               </div>
