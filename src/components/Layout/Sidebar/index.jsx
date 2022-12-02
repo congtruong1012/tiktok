@@ -27,7 +27,7 @@ function Sidebar() {
       link: "/live",
     },
   ];
-  const {pathname} = useLocation()
+  const { pathname } = useLocation();
   const isLogin = useSelector((state) => state.app.isLogin);
 
   return (
@@ -55,7 +55,7 @@ function Sidebar() {
             </li>
           ))}
         </ul>
-        <SuggestAccount />
+        {pathname !== "/following" && <SuggestAccount />}
         {isLogin && <FollowingAccount />}
         <Discover />
         <div className="text-sm text-gray-400 text-center py-4">

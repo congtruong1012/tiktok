@@ -6,10 +6,10 @@ import useDebounce from "../../hooks/useDebounce";
 import IconCircleXMark from "../../icons/IconCircleXMark";
 import IconSearch from "../../icons/IconSearch";
 import IconSpinner from "../../icons/IconSpinner";
+import { search } from "../../services/searchService";
 import Scrollbar from "../Layout/Scrollbar";
 import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import User from "../User";
-import { search } from "../../services/searchService";
 function Search(props) {
   // const ref = useRef();
   const [keySearch, setKeySearch] = useState("");
@@ -78,7 +78,8 @@ function Search(props) {
               onClick={() => setKeySearch("")}
             />
           ))}
-        <button className="absolute border-l rounded-tr-3xl rounded-br-3xl hover:bg-gray-200 px-4 py-2 border-gray-400 right-0 top-1/2 -translate-y-1/2">
+        <span className="absolute right-14 top-1/2 -translate-y-1/2 w-[1px] h-1/2 bg-gray-300"></span>
+        <button className="absolute rounded-tr-3xl rounded-br-3xl hover:bg-gray-200 px-4 py-2 border-gray-400 right-0 top-1/2 -translate-y-1/2">
           <IconSearch />
         </button>
       </div>

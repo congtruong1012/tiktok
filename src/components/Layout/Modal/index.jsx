@@ -1,5 +1,9 @@
 import React from "react";
 import { createPortal } from "react-dom";
+import IconBack from "../../../icons/IconBack";
+import IconCircleXMark from "../../../icons/IconCircleXMark";
+import IconClose from "../../../icons/IconClose";
+import Scrollbar from "../Scrollbar";
 
 const Modal = ({
   children,
@@ -7,41 +11,50 @@ const Modal = ({
   className = "",
   bodyClassName = "",
   onModalClose,
+  footer,
+
+  iconBack,
+  iconBackProps,
 }) => {
   if (typeof document === "undefined") return null;
   if (!isOpen) return null;
   return createPortal(
     <div
-      className={`fixed px-5 inset-0 z-50 flex items-center justify-center ${
+      className={`fixed inset-0 z-50  ${
         isOpen ? "animate-fade" : ""
       } ${className}`}
     >
       <div
-        className="absolute inset-0 bg-black bg-opacity-25"
+        className="fixed inset-0 bg-black bg-opacity-25"
         onClick={onModalClose}
       ></div>
-      <div className={`relative z-50 p-3 ${bodyClassName}`}>
+
+      <div
+        className={`absolute inset-0 z-50 m-auto bg-white max-w-lg h-[80%] ${bodyClassName} `}
+      >
         <div
           aria-label="modal-close"
-          className="absolute flex items-center justify-center w-6 h-6 bg-gray-200 rounded-full cursor-pointer right-5 top-5"
+          className="absolute rounded-full cursor-pointer right-5 top-5"
           onClick={onModalClose}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <IconClose className="cursor-pointer w-5 h-5" />
         </div>
-        {children}
+        {iconBack && (
+          <div
+            aria-label="modal-back"
+            className="absolute left-5 top-5"
+            {...iconBackProps}
+          >
+            <IconBack
+              className="cursor-pointer w-5 h-5"
+              onClick={() => setPage(0)}
+            />
+          </div>
+        )}
+        <div className="flex flex-col h-full pt-8">
+          <Scrollbar className="flex-1">{children}</Scrollbar>
+          {footer}
+        </div>
       </div>
     </div>,
     document.body

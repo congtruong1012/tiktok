@@ -2,17 +2,16 @@ import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import Scrollbar from "../../../components/Layout/Scrollbar";
 import logo from "../../../Image/logo.png";
-import { login } from "../../../services/authService";
+import { login, register as signup } from "../../../services/authService";
 import { checkToken } from "../../App/reducer";
 
 const styleForm =
   "my-1 rounded-md  border-gray-300  shadow-sm  focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50";
 
-function LoginWithEmail({ onClick }) {
+function Register({ onClick }) {
   const mutation = useMutation({
-    mutationFn: (email, password) => login(email, password),
+    mutationFn: (email, password) => signup(email, password),
   });
   const dispatch = useDispatch();
   const {
@@ -48,7 +47,7 @@ function LoginWithEmail({ onClick }) {
       onError: (error) => {
         const eError = {
           422: "The given data was invalid.",
-          401: "Incorrect account or password",
+          409: "Account already exists ",
           default: "Register failed",
         };
         const code = error?.response?.status;
@@ -62,7 +61,7 @@ function LoginWithEmail({ onClick }) {
       <div className="flex justify-center">
         <img className="w-32" src={logo} />
       </div>
-      <h2 className="text-3xl text-gray-700 font-bold py-2">Login</h2>
+      <h2 className="text-3xl text-gray-700 font-bold py-2">Register</h2>
       <div className={`flex flex-wrap space-y-4 m-4 `}>
         <div className="basis-full text-left">
           <input
@@ -98,11 +97,11 @@ function LoginWithEmail({ onClick }) {
           onClick={handleSubmit(onSubmit)}
           className="w-full bg-primary text-white rounded-md py-3 font-semibold"
         >
-          Login
+          Register
         </button>
       </div>
     </div>
   );
 }
 
-export default LoginWithEmail;
+export default Register;

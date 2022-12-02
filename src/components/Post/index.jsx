@@ -42,7 +42,7 @@ function Post(props) {
           />
         </div>
       </div>
-      <div className="px-2">
+      <div className="px-2 flex-grow">
         <div className="flex">
           <div className="flex-grow">
             <HoverCard

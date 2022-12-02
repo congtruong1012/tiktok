@@ -42,7 +42,7 @@ function App() {
           );
         } else if (localStorage.getItem("token")) {
           mutation.mutate("", {
-            onSuccess: (data) => {
+            onSuccess: ({ data }) => {
               const user = data?.data;
               dispatch(
                 checkToken({

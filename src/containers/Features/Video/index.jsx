@@ -23,17 +23,15 @@ function Video(props) {
   }, [inView, hasNextPage]);
 
   return (
-    <div>
+    <>
       {isLoading ? (
-        <div>
-          <div className="flex flex-wrap">
-            <div className="animate-pulse bg-gray-200 w-14 h-14 rounded-full overflow-hidden mr-2"></div>
-            <div className="flex-grow">
-              <div className="animate-pulse bg-gray-200 w-[100px] h-3 rounded-lg"></div>
-              <div className="animate-pulse bg-gray-200 w-[200px] h-3 rounded-lg mt-2"></div>
-              <div className="animate-pulse bg-gray-200 w-[150px] h-3 rounded-lg mt-2"></div>
-              <div className="mt-4 animate-pulse w-[320px] h-[400px] bg-gray-200 "></div>
-            </div>
+        <div className="flex flex-wrap">
+          <div className="animate-pulse bg-gray-200 w-14 h-14 rounded-full overflow-hidden mr-2"></div>
+          <div className="flex-grow">
+            <div className="animate-pulse bg-gray-200 w-[100px] h-3 rounded-lg"></div>
+            <div className="animate-pulse bg-gray-200 w-[200px] h-3 rounded-lg mt-2"></div>
+            <div className="animate-pulse bg-gray-200 w-[150px] h-3 rounded-lg mt-2"></div>
+            <div className="mt-4 animate-pulse w-[320px] h-[400px] bg-gray-200 "></div>
           </div>
         </div>
       ) : (
@@ -46,7 +44,7 @@ function Video(props) {
         </>
       )}
       <div ref={ref}></div>
-    </div>
+    </>
   );
 }
 

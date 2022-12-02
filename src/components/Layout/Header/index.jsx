@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import firebase from "firebase/compat/app";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import IconMessage from "../../../icons/IconMessage";
 import IconSend from "../../../icons/IconSend";
 import IconUpload from "../../../icons/IconUpload";
 import IconUser from "../../../icons/IconUser";
+import { logout as logoutApi } from "../../../services/authService";
 import Search from "../../Search";
 import Image from "../Image";
 
@@ -16,11 +18,19 @@ function Header() {
   const isLogin = useSelector((state) => state.app.isLogin);
   const user = useSelector((state) => state.app.user);
   const dispatch = useDispatch();
+  const { mutate } = useMutation({
+    mutationFn: logoutApi,
+  });
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    firebase.auth().signOut();
-    dispatch(logout());
+    // firebase.auth().signOut();
+    mutate("", {
+      onSuccess: () => {
+        localStorage.removeItem("token");
+        dispatch(logout());
+      },
+      onError: () => alert("Logout failed"),
+    });
   };
 
   return (
