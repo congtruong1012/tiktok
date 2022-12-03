@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import ModalVideoDetail from "../../containers/HOCs/ModalVideoDetail";
 import { useViewPort } from "../../hooks/useViewPort";
 import IconMute from "../../icons/IconMute";
 import IconPause from "../../icons/IconPause";
@@ -75,9 +76,12 @@ function Video(props) {
 
   return (
     <div className="relative video">
-      <video loop src={video?.file_url} ref={ref} className="">
-        {/* <source src={post} /> */}
-      </video>
+      <ModalVideoDetail
+        Component="video"
+        loop
+        src={video?.file_url}
+        ref={ref}
+      />
       <span
         onClick={handleChange}
         className="absolute z-10 left-5 bottom-4 cursor-pointer control"

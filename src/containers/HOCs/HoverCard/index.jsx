@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import React, { useCallback, useState } from "react";
-import Image from "../../components/Layout/Image";
-import { followAccount, unfollowAccount } from "../../services/followAccount";
-import { getAnUser } from "../../services/userService";
-import debounce from "../../utils/debounce";
-import { AuthLogin } from "./AuthLogin";
+import Image from "../../../components/Layout/Image";
+import { followAccount, unfollowAccount } from "../../../services/followAccount";
+import { getAnUser } from "../../../services/userService";
+import debounce from "../../../utils/debounce";
+import { AuthLogin } from "../AuthLogin";
 
 function HoverCard(props) {
   const { Component, userId, ...rest } = props;

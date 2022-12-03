@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Modal from "../../components/Layout/Modal";
-import useSafeState from "../../hooks/useSafeState";
-import Login from "../Pages/Login";
-import Register from "../Pages/Register";
+import Modal from "../../../components/Layout/Modal";
+import useSafeState from "../../../hooks/useSafeState";
+import Login from "../../Pages/Login";
+import Register from "../../Pages/Register";
 
 export function AuthLogin(props) {
   const { Component, onClick, ...rest } = props;
