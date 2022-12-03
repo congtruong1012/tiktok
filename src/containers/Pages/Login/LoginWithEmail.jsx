@@ -40,6 +40,7 @@ function LoginWithEmail({ onClick }) {
               email: user?.email,
               avatar: user?.avatar,
               isVerified: user?.tick,
+              nickname: user?.nickname,
             },
             isLogin: true,
           })

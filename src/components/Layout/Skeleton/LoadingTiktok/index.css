@@ -1,0 +1,62 @@
+:root{
+  --size: 12px
+}
+.tiktok-loader {
+  width: 80px;
+  height: 40px;
+  position: relative;
+  
+}
+
+.tiktok-loader::before,
+.tiktok-loader::after {
+  position: absolute;
+  content: "";
+  top: 6px;
+  background-color: #ff3e9e;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  animation: tiktok-loader-anim 1s linear infinite;
+  
+}
+
+.tiktok-loader::after {
+  background-color: #4de8f4;
+  animation-delay: 0.5s;
+}
+
+@keyframes tiktok-loader-anim {
+
+  0%,
+  100% {
+    top: 6px;
+    left: 0px;
+    width: var(--size);
+    height: var(--size);
+    z-index: 0;
+  }
+
+  25% {
+    top: 0px;
+    height: 24px;
+    width: 24px;
+    z-index: 1;
+    left: var(--size);
+  }
+
+  50% {
+    top: 6px;
+    width: var(--size);
+    height: var(--size);
+    left: 24px;
+  }
+
+  75% {
+    top: 8px;
+    width: var(--size);
+    height: var(--size);
+    left: 22;
+  }
+}

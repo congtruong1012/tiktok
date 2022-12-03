@@ -11,12 +11,11 @@ import Scrollbar from "../Layout/Scrollbar";
 import SkeletonUser from "../Layout/Skeleton/SkeletonUser";
 import User from "../User";
 function Search(props) {
-  // const ref = useRef();
   const [keySearch, setKeySearch] = useState("");
   const searchDebounce = useDebounce(keySearch);
 
   const { isFetching, data } = useQuery({
-    queryKey: ["search", { searchDebounce }],
+    queryKey: ["search", searchDebounce],
     queryFn: () => search(searchDebounce),
     enabled: !!searchDebounce,
   });

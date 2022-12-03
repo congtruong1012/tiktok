@@ -15,6 +15,7 @@ import { checkToken } from "./reducer";
 
 function App() {
   const isLoading = useSelector((state) => state.app.isLoading);
+  const isLogin = useSelector((state) => state.app.isLogin);
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: getCurrentUser,
@@ -54,6 +55,7 @@ function App() {
                     email: user?.email,
                     avatar: user?.avatar,
                     isVerified: user?.tick,
+                    nickname: user?.nickname,
                   },
                   isLogin: true,
                 })

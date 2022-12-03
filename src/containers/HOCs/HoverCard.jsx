@@ -1,21 +1,36 @@
 import { useMutation } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Image from "../../components/Layout/Image";
-import { getAnUser } from "../../services/authService";
+import { followAccount, unfollowAccount } from "../../services/followAccount";
+import { getAnUser } from "../../services/userService";
+import debounce from "../../utils/debounce";
+import { AuthLogin } from "./AuthLogin";
 
 function HoverCard(props) {
   const { Component, userId, ...rest } = props;
-  const [open, setOpen] = useState(false);
 
   const { data, mutate } = useMutation({
     mutationFn: (nickname) => getAnUser(nickname),
   });
 
+  const { mutate: mutateFollow } = useMutation({
+    mutationFn: followAccount,
+    onSuccess: (rs) => Object.assign(data, rs),
+  });
+
+  const { mutate: mutateUnfollow } = useMutation({
+    mutationFn: unfollowAccount,
+    onSuccess: (rs) => Object.assign(data, rs),
+  });
+
+  const deboundceMouseEnter = useCallback(
+    debounce(() => mutate(`@${userId}`), 500),
+    []
+  );
+
   const onMouseEnter = () => {
-    mutate(userId, {
-      onSuccess: () => !data?.is_followed && setOpen(true),
-    });
+    deboundceMouseEnter();
   };
 
   const fullname = `${data?.first_name} ${data?.last_name}`;
@@ -30,9 +45,23 @@ function HoverCard(props) {
               <div className="w-10 h-10 rounded-full overflow-hidden">
                 <Image src={data?.avatar} className="w-full h-full" />
               </div>
-              <button className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary">
-                Follow
-              </button>
+              <AuthLogin Component="div">
+                {data?.is_followed ? (
+                  <button
+                    onClick={() => mutateUnfollow(data?.id)}
+                    className="rounded-lg px-3 py-1 hover:bg-gray-50  font-semibold border border-gray-200"
+                  >
+                    Following
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => mutateFollow(data?.id)}
+                    className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary"
+                  >
+                    Follow
+                  </button>
+                )}
+              </AuthLogin>
             </div>
             <div className="font-bold text-lg">
               {data?.full_name || fullname}

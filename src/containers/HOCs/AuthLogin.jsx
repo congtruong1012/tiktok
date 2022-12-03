@@ -11,9 +11,13 @@ export function AuthLogin(props) {
   const isLogin = useSelector((state) => state.app.isLogin);
   const [page, setPage] = useSafeState(0);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = (e) => {
+    setOpen(false);
+  };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     if (isLogin) {
       onClick();
     } else {

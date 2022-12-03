@@ -17,6 +17,7 @@ import Image from "../Image";
 function Header() {
   const isLogin = useSelector((state) => state.app.isLogin);
   const user = useSelector((state) => state.app.user);
+  console.log("Header  user", user);
   const dispatch = useDispatch();
   const { mutate } = useMutation({
     mutationFn: logoutApi,
@@ -62,7 +63,10 @@ function Header() {
                   <div className="absolute rounded-xl z-40 w-60 shadow-pri top-8 bg-white -right-2 menu">
                     <ul className="py-2">
                       <li className="block p-2 hover:bg-slate-50">
-                        <Link to="#" className="flex items-center">
+                        <Link
+                          to={`/profile/@${user?.nickname}`}
+                          className="flex items-center"
+                        >
                           <IconUser className="w-6 h-6" />
                           <span className="ml-2 text-basic font-medium">
                             View profile
@@ -86,12 +90,12 @@ function Header() {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <a
-                  href="#"
-                  className="rounded py-1.5 px-6 text-base font-semibold border border-solid border-gray-300"
+                <AuthLogin
+                  Component="a"
+                  className="rounded py-1.5 px-6 text-base font-semibold border border-solid border-gray-300  cursor-pointer"
                 >
                   Upload
-                </a>
+                </AuthLogin>
                 <AuthLogin
                   Component="button"
                   className="rounded ml-2 bg-primary py-1.5 px-6 text-white font-semibold"

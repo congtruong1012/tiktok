@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import LoadingTikTok from "../../../components/Layout/Skeleton/LoadingTiktok";
 import Post from "../../../components/Post";
 import { video } from "../../../services/videoService";
 function Video(props) {
@@ -8,7 +9,7 @@ function Video(props) {
   const { ref, inView } = useInView();
   const { isLoading, isFetchingNextPage, hasNextPage, data, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ["videos"],
+      queryKey: ["videos", type],
       queryFn: ({ pageParams = 1 }) => video(pageParams, type),
       getNextPageParam: (params) => {
         const { current_page, total_pages } = params?.meta?.pagination || {};
@@ -41,9 +42,14 @@ function Video(props) {
               <Post key={String(video?.id)} video={video} />
             ));
           })}
+          {isFetchingNextPage && (
+            <div className="flex justify-center items-center my-3">
+              <LoadingTikTok className="w-5 h-5" />
+            </div>
+          )}
+          {hasNextPage && <div ref={ref}></div>}
         </>
       )}
-      <div ref={ref}></div>
     </>
   );
 }

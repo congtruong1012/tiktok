@@ -3,7 +3,7 @@ import React from "react";
 function IconPlay(props) {
   return (
     <svg
-      class="like-icon tiktok-h342g4-StyledPlay e148ts225"
+      className="like-icon tiktok-h342g4-StyledPlay e148ts225"
       width="18"
       height="18"
       viewBox="0 0 48 48"

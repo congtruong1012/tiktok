@@ -1,18 +1,30 @@
+import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow, isValid } from "date-fns";
 import React, { useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { AuthLogin } from "../../containers/HOCs/AuthLogin";
 import HoverCard from "../../containers/HOCs/HoverCard";
 import { useViewPort } from "../../hooks/useViewPort";
 import IconComment from "../../icons/IconComment";
 import IconHeart from "../../icons/IconHeart";
 import IconShared from "../../icons/IconShared";
+import { followAccount, unfollowAccount } from "../../services/followAccount";
 import Image from "../Layout/Image";
 import Video from "../Video";
 // import PropTypes from 'prop-types'
 
 function Post(props) {
   const { video } = props;
-  // const { avatar, user, dateCreated, desc, post, like, comment } = video;
+  const { pathname } = useLocation();
+  const { mutate: mutateFollow } = useMutation({
+    mutationFn: followAccount,
+    onSuccess: (rs) => Object.assign(video, { user: rs }),
+  });
+
+  const { mutate: mutateUnfollow } = useMutation({
+    mutationFn: unfollowAccount,
+    onSuccess: (rs) => Object.assign(video, { user: rs }),
+  });
   const reactions = [
     {
       icon: IconHeart,
@@ -46,12 +58,12 @@ function Post(props) {
         <div className="flex">
           <div className="flex-grow">
             <HoverCard
-              Component="a"
-              className="flex items-center"
+              Component={Link}
+              className="flex items-center "
               userId={video?.user?.nickname}
-              href="#"
+              to={`/profile/@${video?.user?.nickname}`}
             >
-              <h5 className="text-lg font-bold mr-2">{`${video?.user?.first_name} ${video?.user?.last_name}`}</h5>
+              <h5 className="text-lg font-bold mr-2 hover:underline">{`${video?.user?.first_name} ${video?.user?.last_name}`}</h5>
               {video?.user?.nickname && (
                 <div className="text-gray-600">
                   <span> · </span>
@@ -74,13 +86,26 @@ function Post(props) {
               {video?.description}
             </p>
           </div>
-          <div className="">
-            {video?.user?.is_followed === false && (
-              <button className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary">
-                Follow
-              </button>
-            )}
-          </div>
+
+          {pathname !== "/following" && (
+            <AuthLogin Component="div">
+              {video?.user?.is_followed ? (
+                <button
+                  onClick={() => mutateUnfollow(video?.user?.id)}
+                  className="rounded-lg px-3 py-1 hover:bg-gray-50 font-semibold border border-gray-200"
+                >
+                  Following
+                </button>
+              ) : (
+                <button
+                  onClick={() => mutateFollow(video?.user?.id)}
+                  className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary"
+                >
+                  Follow
+                </button>
+              )}
+            </AuthLogin>
+          )}
         </div>
 
         <div className="flex my-2">
@@ -105,7 +130,7 @@ function Post(props) {
                 >
                   <item.icon
                     className={`w-6 h-6`}
-                    fill={item.num === "Share" ? '#000' : undefined}
+                    fill={item.num === "Share" ? "#000" : undefined}
                   />
                 </AuthLogin>
                 <div className="text-sm font-bold mt-1">{item.num}</div>

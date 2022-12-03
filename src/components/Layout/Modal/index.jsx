@@ -20,7 +20,7 @@ const Modal = ({
   if (!isOpen) return null;
   return createPortal(
     <div
-      className={`fixed inset-0 z-50  ${
+      className={`fixed inset-0 z-[9999]  ${
         isOpen ? "animate-fade" : ""
       } ${className}`}
     >

@@ -42,12 +42,3 @@ export const getCurrentUser = async () => {
     throw error;
   }
 };
-
-export const getAnUser = async (nickname) => {
-  try {
-    const res = await httpRequest(`users/@${nickname}`);
-    return res.data?.data || {};
-  } catch (error) {
-    throw error;
-  }
-};

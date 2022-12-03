@@ -12,3 +12,21 @@ export const followAccounts = async (page) => {
     console.log(error);
   }
 };
+
+export const followAccount = async (userId) => {
+  try {
+    const res = await httpRequest.post(`users/${userId}/follow`);
+    return res.data?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unfollowAccount = async (userId) => {
+  try {
+    const res = await httpRequest.post(`users/${userId}/unfollow`);
+    return res.data?.data;
+  } catch (error) {
+    throw error;
+  }
+};
