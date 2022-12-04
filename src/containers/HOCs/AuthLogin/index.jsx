@@ -6,7 +6,7 @@ import Login from "../../Pages/Login";
 import Register from "../../Pages/Register";
 
 export function AuthLogin(props) {
-  const { Component, onClick, ...rest } = props;
+  const { Component, onClick = () => {}, ...rest } = props;
   const [open, setOpen] = useSafeState(false);
   const isLogin = useSelector((state) => state.app.isLogin);
   const [page, setPage] = useSafeState(0);

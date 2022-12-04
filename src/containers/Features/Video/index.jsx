@@ -10,11 +10,12 @@ function Video(props) {
   const { isLoading, isFetchingNextPage, hasNextPage, data, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["videos", type],
-      queryFn: ({ pageParams = 1 }) => video(pageParams, type),
+      queryFn: ({ pageParam = 1 }) => video(pageParam, type),
       getNextPageParam: (params) => {
         const { current_page, total_pages } = params?.meta?.pagination || {};
         return current_page < total_pages ? current_page + 1 : undefined;
       },
+      onSuccess: (data) => console.log(data),
     });
 
   useEffect(() => {
@@ -39,7 +40,7 @@ function Video(props) {
         <>
           {data?.pages?.map((page) => {
             return page?.data?.map((video) => (
-              <Post key={String(video?.id)} video={video} />
+              <Post key={String(video?.id)} video={video} type={type} />
             ));
           })}
           {isFetchingNextPage && (

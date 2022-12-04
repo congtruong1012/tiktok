@@ -1,14 +1,21 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import React, { useCallback, useState } from "react";
 import Image from "../../../components/Layout/Image";
-import { followAccount, unfollowAccount } from "../../../services/followAccount";
+import {
+  followAccount,
+  unfollowAccount,
+} from "../../../services/followAccount";
 import { getAnUser } from "../../../services/userService";
 import debounce from "../../../utils/debounce";
 import { AuthLogin } from "../AuthLogin";
 
 function HoverCard(props) {
-  const { Component, userId, ...rest } = props;
+  const { Component, userId, cbSuccess, ...rest } = props;
 
   const { data, mutate } = useMutation({
     mutationFn: (nickname) => getAnUser(nickname),
@@ -16,16 +23,28 @@ function HoverCard(props) {
 
   const { mutate: mutateFollow } = useMutation({
     mutationFn: followAccount,
-    onSuccess: (rs) => Object.assign(data, rs),
+    onSuccess: (rs) => {
+      Object.assign(data, rs);
+      if (typeof cbSuccess === "function") {
+        cbSuccess(rs);
+      }
+    },
   });
 
   const { mutate: mutateUnfollow } = useMutation({
     mutationFn: unfollowAccount,
-    onSuccess: (rs) => Object.assign(data, rs),
+    onSuccess: (rs) => {
+      Object.assign(data, rs);
+      if (typeof cbSuccess === "function") {
+        cbSuccess(rs);
+      }
+    },
   });
 
   const deboundceMouseEnter = useCallback(
-    debounce(() => mutate(`@${userId}`), 500),
+    debounce(() => {
+      mutate(`@${userId}`);
+    }, 500),
     []
   );
 

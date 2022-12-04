@@ -17,7 +17,6 @@ import Image from "../Image";
 function Header() {
   const isLogin = useSelector((state) => state.app.isLogin);
   const user = useSelector((state) => state.app.user);
-  console.log("Header  user", user);
   const dispatch = useDispatch();
   const { mutate } = useMutation({
     mutationFn: logoutApi,

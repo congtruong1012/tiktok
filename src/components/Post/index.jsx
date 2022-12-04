@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthLogin } from "../../containers/HOCs/AuthLogin";
 import HoverCard from "../../containers/HOCs/HoverCard";
+import useSafeState from "../../hooks/useSafeState";
 import { useViewPort } from "../../hooks/useViewPort";
 import IconComment from "../../icons/IconComment";
 import IconHeart from "../../icons/IconHeart";
@@ -14,16 +15,17 @@ import Video from "../Video";
 // import PropTypes from 'prop-types'
 
 function Post(props) {
-  const { video } = props;
+  const { video: defaultaVideo } = props;
+  const [video, setVideo] = useSafeState(defaultaVideo);
   const { pathname } = useLocation();
   const { mutate: mutateFollow } = useMutation({
     mutationFn: followAccount,
-    onSuccess: (rs) => Object.assign(video, { user: rs }),
+    onSuccess: (rs) => setVideo((prev) => ({ ...prev, user: rs })),
   });
 
   const { mutate: mutateUnfollow } = useMutation({
     mutationFn: unfollowAccount,
-    onSuccess: (rs) => Object.assign(video, { user: rs }),
+    onSuccess: (rs) => setVideo((prev) => ({ ...prev, user: rs })),
   });
   const reactions = [
     {
@@ -47,10 +49,13 @@ function Post(props) {
         <div className="w-14 h-14 rounded-full overflow-hidden">
           <HoverCard
             Component={Image}
+            userId={video?.user?.nickname}
+            cbSuccess={(rs) => {
+              setVideo((prev) => ({ ...prev, user: rs }));
+            }}
             src={video?.user?.avatar}
             alt="user"
             className="w-full h-full object-cover"
-            userId={video?.user?.nickname}
           />
         </div>
       </div>
@@ -59,8 +64,11 @@ function Post(props) {
           <div className="flex-grow">
             <HoverCard
               Component={Link}
-              className="flex items-center "
               userId={video?.user?.nickname}
+              cbSuccess={(rs) => {
+                setVideo((prev) => ({ ...prev, user: rs }));
+              }}
+              className="flex items-center "
               to={`/profile/@${video?.user?.nickname}`}
             >
               <h5 className="text-lg font-bold mr-2 hover:underline">{`${video?.user?.first_name} ${video?.user?.last_name}`}</h5>
@@ -75,10 +83,15 @@ function Post(props) {
               <div className="ml-1 text-gray-400">
                 <span> · </span>
                 <span className="text-sm">
-                  {isValid(new Date(video?.published_at)) &&
-                    formatDistanceToNow(new Date(video?.published_at), {
-                      addSuffix: true,
-                    })}
+                  {isValid(
+                    new Date(video?.updated_at || video?.published_at)
+                  ) &&
+                    formatDistanceToNow(
+                      new Date(video?.updated_at || video?.published_at),
+                      {
+                        addSuffix: true,
+                      }
+                    )}
                 </span>
               </div>
             </HoverCard>

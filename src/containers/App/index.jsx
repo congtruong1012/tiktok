@@ -45,10 +45,11 @@ function App() {
         } else if (localStorage.getItem("token")) {
           mutation.mutate("", {
             onSuccess: ({ data }) => {
-              const user = data?.data;
+              const user = { ...data };
               dispatch(
                 checkToken({
                   data: {
+                    id: user?.id,
                     fullname:
                       user?.full_name ||
                       `${user?.first_name} ${user?.last_name}`,

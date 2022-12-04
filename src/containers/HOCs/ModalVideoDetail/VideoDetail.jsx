@@ -7,7 +7,8 @@ import IconPlay from "../../../icons/IconPlay";
 import IconTikTok from "../../../icons/IconTikTok";
 import IconUnmute from "../../../icons/IconUnmute";
 
-function VideoDetail() {
+function VideoDetail(props) {
+  const { video } = props;
   const [play, onOpen, onClose, handleToggle] = useToggle(true);
   const [volume, setVolume] = useState(0);
   const ref = useRef();
@@ -18,19 +19,26 @@ function VideoDetail() {
   };
 
   useEffect(() => {
+    const currentVolume =
+      (localStorage.getItem("volume") || videoRef.current.volume) * 100;
+    setVolume(currentVolume);
+  }, []);
+
+  useEffect(() => {
     if (volume > 0) {
       prevVolume.current = volume;
     }
-    ref.current.volume = volume / 100;
+    ref.current.volume = +volume / 100;
+    localStorage.setItem("volume", +volume / 100);
   }, [volume]);
 
   useEffect(() => {
+    ref.current.muted = !play;
     if (play) {
       ref.current.play();
     } else {
       ref.current.pause();
     }
-     ref.current.muted = !!play;
   }, [play]);
 
   return (
@@ -74,8 +82,11 @@ function VideoDetail() {
           </span>
         )}
         <div
-          style={{ filter: "blur(20px)" }}
-          className="absolute inset-0 opacity-20 bg-no-repeat bg-cover bg-center bg-[url('https://files.fullstack.edu.vn/f8-tiktok/videos/8-630268a15142b.jpg')]"
+          style={{
+            backgroundImage: `url(${video?.thumb_url})`,
+            filter: "blur(20px)",
+          }}
+          className={`absolute inset-0 opacity-20 bg-no-repeat bg-cover bg-center`}
         ></div>
         <div
           onClick={handleToggle}
@@ -86,7 +97,7 @@ function VideoDetail() {
               ref={ref}
               loop
               className="w-auto h-full object-contain shadow-lg"
-              src="https://files.fullstack.edu.vn/f8-tiktok/videos/838-6371fd17211a6.mp4"
+              src={video?.file_url}
             ></video>
           </div>
         </div>
