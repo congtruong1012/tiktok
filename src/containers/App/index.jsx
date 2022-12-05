@@ -48,16 +48,7 @@ function App() {
               const user = { ...data };
               dispatch(
                 checkToken({
-                  data: {
-                    id: user?.id,
-                    fullname:
-                      user?.full_name ||
-                      `${user?.first_name} ${user?.last_name}`,
-                    email: user?.email,
-                    avatar: user?.avatar,
-                    isVerified: user?.tick,
-                    nickname: user?.nickname,
-                  },
+                  data,
                   isLogin: true,
                 })
               );

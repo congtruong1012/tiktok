@@ -6,6 +6,7 @@ import LoadingTikTok from "../../../components/Layout/Skeleton/LoadingTiktok";
 import Post from "../../../components/Post";
 import { video } from "../../../services/videoService";
 import { makeSelectUserInfo, userStorage } from "../User/reducer";
+import { videoStorage } from "./reducer";
 function Video(props) {
   const { type } = props;
   const { ref, inView } = useInView();
@@ -21,15 +22,22 @@ function Video(props) {
         return current_page < total_pages ? current_page + 1 : undefined;
       },
       onSuccess: (data) => {
-        const byId = {};
-        let allIds = [];
+        const byIdUser = {};
+        let allIdsUser = [];
+
+        const byIdVideo = {};
+        let allIdsVideo = [];
+
         data?.pages?.forEach((page) => {
-          allIds = page?.data?.map((item) => item?.user?.id || "") || [];
+          allIdsUser = page?.data?.map((item) => item?.user?.id || "") || [];
+          allIdsVideo = page?.data?.map((item) => item?.id || "") || [];
           page?.data.forEach((item) => {
-            byId[item?.user?.id] = item?.user;
+            byIdUser[item?.user?.id] = item?.user;
+            byIdVideo[item?.id] = item;
           });
         });
-        dispatch(userStorage({ byId, allIds }));
+        dispatch(userStorage({ byId: byIdUser, allIds: allIdsUser }));
+        dispatch(videoStorage({ byId: byIdVideo, allIds: allIdsVideo }));
       },
     });
 

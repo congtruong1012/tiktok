@@ -64,7 +64,7 @@ function SuggestAccountNonLogin() {
                 >
                   <div className="relative w-full h-full shadow-lg ">
                     <HoverVideoPlayer
-                      className="w-[calc(100%+0.5px)] h-full rounded-lg "
+                      className="w-[calc(100%+0.5px)] h-full rounded-xl overflow-hidden"
                       videoClassName="h-full object-cover"
                       videoSrc={item?.popular_video?.file_url}
                       pausedOverlay={

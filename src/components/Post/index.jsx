@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { makeSelectUserInfo } from "../../containers/Features/User/reducer";
+import { makeSelectVideoInfo } from "../../containers/Features/Video/reducer";
 import { AuthLogin } from "../../containers/HOCs/AuthLogin";
 import HoverCard from "../../containers/HOCs/HoverCard";
 import ModalVideoDetail from "../../containers/HOCs/ModalVideoDetail";
@@ -19,8 +20,12 @@ import Video from "../Video";
 function Post(props) {
   const { video } = props;
   const ref = useRef();
+
   const userInfo = useSelector((state) =>
     makeSelectUserInfo(state, video?.user?.id)
+  );
+  const videoInfo = useSelector((state) =>
+    makeSelectVideoInfo(state, video?.id)
   );
 
   const { pathname } = useLocation();
@@ -31,26 +36,23 @@ function Post(props) {
   });
 
   const { handleLikeVideo } = useLikeVideo({
-    videoId: video?.id,
-    status: video?.is_liked,
-    onSuccess: (rs) => {
-      Object.assign(video, rs);
-    },
+    videoId: videoInfo?.id,
+    status: videoInfo?.is_liked,
   });
 
   const reactions = [
     {
       icon: (
         <IconHeart
-          className={`w-6 h-6 ${video?.is_liked ? "text-primary" : ""}`}
+          className={`w-6 h-6 ${videoInfo?.is_liked ? "text-primary" : ""}`}
           onClick={handleLikeVideo}
         />
       ),
-      num: video?.likes_count || 0,
+      num: videoInfo?.likes_count || 0,
     },
     {
       icon: (
-        <ModalVideoDetail Component="span" video={video} ref={ref}>
+        <ModalVideoDetail Component="span" video={videoInfo} ref={ref}>
           <IconComment className={`w-6 h-6 `} />
         </ModalVideoDetail>
       ),
@@ -97,10 +99,12 @@ function Post(props) {
                 <span> · </span>
                 <span className="text-sm">
                   {isValid(
-                    new Date(video?.updated_at || video?.published_at)
+                    new Date(videoInfo?.updated_at || videoInfo?.published_at)
                   ) &&
                     formatDistanceToNow(
-                      new Date(video?.updated_at || video?.published_at),
+                      new Date(
+                        videoInfo?.updated_at || videoInfo?.published_at
+                      ),
                       {
                         addSuffix: true,
                       }
@@ -109,7 +113,7 @@ function Post(props) {
               </div>
             </HoverCard>
             <p className="py-1 leading-5 whitespace-pre-line">
-              {video?.description}
+              {videoInfo?.description}
             </p>
           </div>
 
@@ -125,9 +129,9 @@ function Post(props) {
         </div>
 
         <div className="flex my-2">
-          <div className="w-1/2">
-            <Video {...props} />
-          </div>
+          {/* <div className="w-1/2"> */}
+          <Video {...props} video={videoInfo} />
+          {/* </div> */}
           <div className="w-1/2 flex flex-col justify-end pl-4">
             {reactions.map((item, i) => (
               <div

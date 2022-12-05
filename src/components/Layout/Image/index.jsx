@@ -3,26 +3,18 @@ import { useState } from "react";
 import noImage from "../../../Image/no-image.png";
 
 function Image(props) {
-  const {
-    src,
-    alt,
-    className,
-    fallback: customFallback = noImage,
-    ...rest
-  } = props;
-  const [fallback, setFallback] = useState("");
-
-  const handleError = () => {
-    setFallback(customFallback);
-  };
+  const { src, alt, className, fallback = noImage, ...rest } = props;
 
   return (
     <img
-      src={fallback || src}
+      src={src}
       alt={alt}
       className={className}
       {...rest}
-      onError={handleError}
+      onError={({ currentTarget }) => {
+        currentTarget.onerror = null; // prevents looping
+        currentTarget.src = fallback;
+      }}
     />
   );
 }

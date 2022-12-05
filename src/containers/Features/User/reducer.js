@@ -24,15 +24,11 @@ const userSlice = createSlice({
 
 const { getInitialState, reducer, actions } = userSlice;
 
-const userSelectUser = (state) => state?.user?.byId || getInitialState()?.byId;
+const selectUser = (state) => state?.user?.byId || getInitialState()?.byId;
 const getUserId = (_, id) => id;
-const makeSelectUserInfo = createSelector(
-  userSelectUser,
-  getUserId,
-  (user, id) => {
-    return user?.[id] || null;
-  }
-);
+const makeSelectUserInfo = createSelector(selectUser, getUserId, (user, id) => {
+  return user?.[id] || null;
+});
 
 const { userStorage, updateUser } = actions;
 export { userStorage, updateUser, makeSelectUserInfo };

@@ -9,6 +9,10 @@ const Modal = ({
   children,
   isOpen = false,
   className = "",
+
+  title,
+  titleClassName,
+
   bodyClassName = "",
   onModalClose,
   footer,
@@ -39,6 +43,13 @@ const Modal = ({
         >
           <IconClose className="cursor-pointer w-5 h-5" />
         </div>
+        {title && (
+          <div
+            className={`absolute -z-10 text-xl font-semibold left-0 right-0 top-0 p-4 border-b border-gray-200 border-solid ${titleClassName}`}
+          >
+            {title}
+          </div>
+        )}
         {iconBack && (
           <div
             aria-label="modal-back"

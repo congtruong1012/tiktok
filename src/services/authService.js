@@ -42,3 +42,16 @@ export const getCurrentUser = async () => {
     throw error;
   }
 };
+
+export const updateCurrentUser = async (body) => {
+  try {
+    const res = await httpRequest.post("auth/me?_method=PATCH", body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};

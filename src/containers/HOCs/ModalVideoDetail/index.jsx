@@ -38,9 +38,6 @@ function ModalVideoDetail(props, ref) {
   const { handleLikeVideo } = useLikeVideo({
     videoId: video?.id,
     status: video?.is_liked,
-    onSuccess: (rs) => {
-      Object.assign(video, rs);
-    },
   });
 
   const onOpen = (e) => {

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
+import { makeSelectVideoInfo } from "../../containers/Features/Video/reducer";
 import ModalVideoDetail from "../../containers/HOCs/ModalVideoDetail";
 import { useViewPort } from "../../hooks/useViewPort";
 import IconMute from "../../icons/IconMute";
@@ -8,10 +10,17 @@ import IconPlay from "../../icons/IconPlay";
 import IconUnmute from "../../icons/IconUnmute";
 // import PropTypes from 'prop-types'
 
+// const sizeWidth = "w-[calc(450px + ((100vw - 760px) / 1152) * 100)]";
+// const sizeHeight = "h-[calc(450px + ((100vw - 760px) / 1152) * 100)]";
+const sizeVideo = "calc(450px + ((100vw - 760px) / 1152) * 100)";
+
 function Video(props) {
   const { video } = props;
+
   const [volume, setVolume] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [ratioVideo, setRatioVideo] = useState();
+
   const prevVolume = useRef(volume);
   const videoRef = useRef();
   const volumeRef = useRef();
@@ -60,8 +69,22 @@ function Video(props) {
     setIsPlaying(inView);
   }, [inView]);
 
+  useEffect(() => {
+    const ratio =
+      video?.meta?.video?.resolution_x / video?.meta?.video?.resolution_y;
+    setRatioVideo(ratio);
+    // setClassSize(ratio < 1 ? sizeHeight : sizeWidth);
+  }, []);
+
   return (
-    <div ref={ref} className="relative video">
+    <div
+      ref={ref}
+      className="relative rounded-xl overflow-hidden video"
+      style={{
+        width: ratioVideo < 1 ? `calc(${sizeVideo}*${ratioVideo})` : "",
+        height: ratioVideo > 1 ? `calc(${sizeVideo}/${ratioVideo})` : "",
+      }}
+    >
       <ModalVideoDetail
         Component="video"
         video={video}

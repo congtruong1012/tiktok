@@ -1,13 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { updateVideo } from "../containers/Features/Video/reducer";
 import { likeVideo, unlikeVideo } from "../services/videoService";
 
 export default function useLikeVideo({ videoId, status, onSuccess, onError }) {
+  const dispatch = useDispatch();
+
   const { mutate: mutateLikeVideo } = useMutation({
     mutationKey: ["like-video", videoId],
     mutationFn: (id) => likeVideo(id),
-    onSuccess: (rs) => {
+    onSuccess: ({ data }) => {
+      dispatch(
+        updateVideo({
+          id: data?.id,
+          byId: data,
+        })
+      );
       if (typeof onSuccess === "function") {
-        onSuccess(rs?.data);
+        onSuccess(data);
       }
     },
     onError: (error) => {
@@ -20,9 +30,15 @@ export default function useLikeVideo({ videoId, status, onSuccess, onError }) {
   const { mutate: mutateUnlikeVideo } = useMutation({
     mutationKey: ["unlike-video", videoId],
     mutationFn: (id) => unlikeVideo(id),
-    onSuccess: (rs) => {
+    onSuccess: ({ data }) => {
+      dispatch(
+        updateVideo({
+          id: data?.id,
+          byId: data,
+        })
+      );
       if (typeof onSuccess === "function") {
-        onSuccess(rs?.data);
+        onSuccess(data);
       }
     },
     onError: (error) => {
@@ -33,6 +49,7 @@ export default function useLikeVideo({ videoId, status, onSuccess, onError }) {
   });
 
   const handleLikeVideo = () => {
+    console.log('handleLikeVideo  status', status);
     status ? mutateUnlikeVideo(videoId) : mutateLikeVideo(videoId);
   };
   return { handleLikeVideo };
