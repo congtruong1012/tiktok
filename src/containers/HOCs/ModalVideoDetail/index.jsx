@@ -1,9 +1,13 @@
 import { format } from "date-fns";
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ButtonFollow from "../../../components/ButtonFollow";
 import Image from "../../../components/Layout/Image";
 import Modal from "../../../components/Layout/Modal";
+import useFollowUser from "../../../hooks/useFllowUser";
+import useLikeVideo from "../../../hooks/useLikeVideo";
 import useToggle from "../../../hooks/useToggle";
 import IconCircleXMark from "../../../icons/IconCircleXMark";
 import IconClose from "../../../icons/IconClose";
@@ -11,6 +15,7 @@ import IconComment from "../../../icons/IconComment";
 import IconHeart from "../../../icons/IconHeart";
 import IconMusic from "../../../icons/IconMusic";
 import Comment from "../../Features/Comment";
+import { makeSelectUserInfo } from "../../Features/User/reducer";
 import HoverCard from "../HoverCard";
 import ModalComment from "./ModalComment";
 import VideoDetail from "./VideoDetail";
@@ -20,8 +25,27 @@ function ModalVideoDetail(props, ref) {
   const { cbOpen, cbClose } = callback;
   const [open, handleOpen, handleClose] = useToggle();
 
-  const onOpen = () => {
-    handleOpen();
+  const userInfo = useSelector((state) =>
+    makeSelectUserInfo(state, video?.user?.id)
+  );
+  const isLogin = useSelector((state) => state.app?.isLogin);
+
+  const { handleFollow } = useFollowUser({
+    userId: userInfo?.id,
+    status: userInfo?.is_followed,
+  });
+
+  const { handleLikeVideo } = useLikeVideo({
+    videoId: video?.id,
+    status: video?.is_liked,
+    onSuccess: (rs) => {
+      Object.assign(video, rs);
+    },
+  });
+
+  const onOpen = (e) => {
+    e.preventDefault();
+    if (isLogin) handleOpen();
   };
 
   const onClose = () => {
@@ -67,10 +91,10 @@ function ModalVideoDetail(props, ref) {
                       <HoverCard
                         Component="div"
                         className="w-12 h-12 overflow-hidden rounded-full"
-                        userId={`${video?.user?.nickname}`}
+                        userId={`${userInfo?.nickname}`}
                       >
                         <Image
-                          src={video?.user?.avatar}
+                          src={userInfo?.avatar}
                           className="w-full h-full"
                         />
                       </HoverCard>
@@ -79,11 +103,11 @@ function ModalVideoDetail(props, ref) {
                           Component={Link}
                           to={`/profile/@${video?.user.nickname}`}
                           className="font-bold text-lg hover:underline"
-                          userId={`${video?.user?.nickname}`}
-                        >{`${video?.user?.first_name} ${video?.user?.last_name}`}</HoverCard>
+                          userId={`${userInfo?.nickname}`}
+                        >{`${userInfo?.first_name} ${userInfo?.last_name}`}</HoverCard>
                         <div className="flex items-center text-sm">
                           <span className="font-normal ">
-                            {video?.user?.nickname}
+                            {userInfo?.nickname}
                           </span>
                           <span className="mx-1"> · </span>
                           <span className="font-normal text-sm">
@@ -97,15 +121,21 @@ function ModalVideoDetail(props, ref) {
                         </div>
                       </div>
                       <div>
-                        {!video?.user?.is_followed ? (
-                          <button className="border-primary border border-solid text-primary rounded-lg py-1 px-8 font-semibold hover:bg-stone-50">
-                            Follow
-                          </button>
-                        ) : (
-                          <button className="border-gray-300 border border-solid text-black rounded-lg py-1 px-8 font-semibold hover:bg-stone-50">
-                            Following
-                          </button>
-                        )}
+                        {/* <button
+                          onClick={handleFollow}
+                          className={`${
+                            userInfo?.is_followed
+                              ? "border-gray-300 hover:bg-stone-50 "
+                              : "border-primary text-primary hover:bg-red-50"
+                          }   rounded-lg py-1 px-8 font-semibold border border-solid `}
+                        >
+                          {userInfo?.is_followed ? "Following" : "Follow"}
+                        </button> */}
+                        <ButtonFollow
+                          isFollowed={userInfo?.is_followed}
+                          className="py-1 px-8"
+                          onClick={handleFollow}
+                        />
                       </div>
                     </div>
                     {/* Description */}
@@ -120,9 +150,10 @@ function ModalVideoDetail(props, ref) {
                     <div className="my-4 flex space-x-4">
                       <div className="flex space-x-2 items-center cursor-pointer">
                         <IconHeart
+                          onClick={handleLikeVideo}
                           className={`p-1.5 ${
-                            video?.is_liked ? "bg-primary" : "bg-slate-100"
-                          } rounded-full`}
+                            video?.is_liked ? "text-primary" : "text-black"
+                          } rounded-full bg-slate-100`}
                         />
                         <span className="text-xs font-semibold">
                           {video?.likes_count}

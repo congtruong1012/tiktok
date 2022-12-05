@@ -1,12 +1,17 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingTikTok from "../../../components/Layout/Skeleton/LoadingTiktok";
 import Post from "../../../components/Post";
 import { video } from "../../../services/videoService";
+import { makeSelectUserInfo, userStorage } from "../User/reducer";
 function Video(props) {
   const { type } = props;
   const { ref, inView } = useInView();
+
+  const dispatch = useDispatch();
+
   const { isLoading, isFetchingNextPage, hasNextPage, data, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["videos", type],
@@ -15,7 +20,17 @@ function Video(props) {
         const { current_page, total_pages } = params?.meta?.pagination || {};
         return current_page < total_pages ? current_page + 1 : undefined;
       },
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        const byId = {};
+        let allIds = [];
+        data?.pages?.forEach((page) => {
+          allIds = page?.data?.map((item) => item?.user?.id || "") || [];
+          page?.data.forEach((item) => {
+            byId[item?.user?.id] = item?.user;
+          });
+        });
+        dispatch(userStorage({ byId, allIds }));
+      },
     });
 
   useEffect(() => {

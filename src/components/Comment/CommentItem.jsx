@@ -9,7 +9,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { makeSelectUserInfo } from "../../containers/Features/User/reducer";
 import HoverCard from "../../containers/HOCs/HoverCard";
+import useLikeComment from "../../hooks/useLikeComment";
 import IconHeart from "../../icons/IconHeart";
 import IconMoreHorizontal from "../../icons/IconMoreHorizontal";
 import { deleteComment } from "../../services/commentService";
@@ -17,7 +19,10 @@ import Image from "../Layout/Image";
 
 function CommentItem(props) {
   const { comment, queryKey, videoId } = props;
-  const userId = useSelector((state) => state?.app?.user?.id);
+  const userIdLogin = useSelector((state) => state?.app?.user?.id);
+  const userInfo = useSelector((state) =>
+    makeSelectUserInfo(state, comment?.user?.id)
+  );
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -27,25 +32,33 @@ function CommentItem(props) {
     },
   });
 
+  const { handleLikeComment } = useLikeComment({
+    commentId: comment?.id,
+    status: comment?.is_liked,
+    onSuccess: (rs) => {
+      Object.assign(comment, rs);
+    },
+  });
+
   return (
     <div className="flex space-x-4">
       <div className="w-10 h-10 rounded-full overflow-hidden">
         <HoverCard
           Component={Image}
-          userId={comment?.user?.nickname}
+          userId={userInfo?.nickname}
           className="w-full h-full cursor-pointer"
-          src={comment?.user?.avatar}
+          src={userInfo?.avatar}
         ></HoverCard>
       </div>
       <div className="flex-grow">
         <div className="flex flex-col">
           <HoverCard
             Component={Link}
-            to={`/profile/@${comment?.user?.nickname}`}
-            userId={comment?.user?.nickname}
+            to={`/profile/@${userInfo?.nickname}`}
+            userId={userInfo?.nickname}
             className="text-lg font-bold inline-block hover:underline"
           >
-            {`${comment?.user?.first_name} ${comment?.user?.last_name}`}
+            {`${userInfo?.first_name} ${comment?.user?.last_name}`}
           </HoverCard>
           <span className="text-base">{comment?.comment}</span>
           <div className="flex space-x-6 my-1 text-gray-400 text-sm font-light">
@@ -62,7 +75,7 @@ function CommentItem(props) {
         </div>
       </div>
       <div className="flex flex-col space-y-2 items-center ">
-        {comment.user?.id === userId && (
+        {userInfo?.id === userIdLogin && (
           <Tippy
             placement="bottom-end"
             interactive
@@ -87,6 +100,7 @@ function CommentItem(props) {
         )}
         <div className="text-center cursor-pointer">
           <IconHeart
+            onClick={handleLikeComment}
             className={`w-5 h-5 ${
               comment?.is_liked ? "text-primary" : "text-black"
             }`}

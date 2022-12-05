@@ -39,3 +39,21 @@ export const getVideoLiked = async (userId, page = 1) => {
     throw error;
   }
 };
+
+export const likeVideo = async (videoId) => {
+  try {
+    const res = await httpRequest.post(`videos/${videoId}/like`);
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unlikeVideo = async (videoId) => {
+  try {
+    const res = await httpRequest.post(`videos/${videoId}/unlike`);
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};

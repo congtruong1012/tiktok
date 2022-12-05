@@ -32,3 +32,21 @@ export const deleteComment = async ({ commentId }) => {
     throw error;
   }
 };
+
+export const likeComment = async (commentId) => {
+  try {
+    const res = await httpRequest.post(`comments/${commentId}/like`);
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unlikeComment = async (commentId) => {
+  try {
+    const res = await httpRequest.post(`comments/${commentId}/unlike`);
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};

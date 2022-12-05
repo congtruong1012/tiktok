@@ -1,49 +1,45 @@
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ButtonFollow from "../../../components/ButtonFollow";
 import Image from "../../../components/Layout/Image";
-import {
-  followAccount,
-  unfollowAccount,
-} from "../../../services/followAccount";
+import useFollowUser from "../../../hooks/useFllowUser";
 import { getAnUser } from "../../../services/userService";
 import debounce from "../../../utils/debounce";
+import { makeSelectUserInfo, userStorage } from "../../Features/User/reducer";
 import { AuthLogin } from "../AuthLogin";
 
 function HoverCard(props) {
-  const { Component, userId, cbSuccess, ...rest } = props;
+  const { Component, userId, ...rest } = props;
+
+  const dispatch = useDispatch();
 
   const { data, mutate } = useMutation({
     mutationFn: (nickname) => getAnUser(nickname),
   });
 
-  const { mutate: mutateFollow } = useMutation({
-    mutationFn: followAccount,
-    onSuccess: (rs) => {
-      Object.assign(data, rs);
-      if (typeof cbSuccess === "function") {
-        cbSuccess(rs);
-      }
-    },
-  });
+  const userInfo = useSelector((state) => makeSelectUserInfo(state, data?.id));
 
-  const { mutate: mutateUnfollow } = useMutation({
-    mutationFn: unfollowAccount,
-    onSuccess: (rs) => {
-      Object.assign(data, rs);
-      if (typeof cbSuccess === "function") {
-        cbSuccess(rs);
-      }
-    },
+  const { handleFollow } = useFollowUser({
+    userId: userInfo?.id,
+    status: userInfo?.is_followed,
   });
 
   const deboundceMouseEnter = useCallback(
     debounce(() => {
-      mutate(`@${userId}`);
+      mutate(`@${userId}`, {
+        onSuccess: (rs) => {
+          dispatch(
+            userStorage({
+              allIds: [rs?.id],
+              byId: {
+                [rs?.id]: rs,
+              },
+            })
+          );
+        },
+      });
     }, 500),
     []
   );
@@ -52,7 +48,7 @@ function HoverCard(props) {
     deboundceMouseEnter();
   };
 
-  const fullname = `${data?.first_name} ${data?.last_name}`;
+  const fullname = `${userInfo?.first_name} ${userInfo?.last_name}`;
 
   return (
     <>
@@ -62,45 +58,39 @@ function HoverCard(props) {
           <div className="bg-white w-[320px] p-4 shadow-md">
             <div className="flex justify-between mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden">
-                <Image src={data?.avatar} className="w-full h-full" />
+                <Image src={userInfo?.avatar} className="w-full h-full" />
               </div>
               <AuthLogin Component="div">
-                {data?.is_followed ? (
-                  <button
-                    onClick={() => mutateUnfollow(data?.id)}
-                    className="rounded-lg px-3 py-1 hover:bg-gray-50  font-semibold border border-gray-200"
-                  >
-                    Following
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => mutateFollow(data?.id)}
-                    className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary"
-                  >
-                    Follow
-                  </button>
-                )}
+                <ButtonFollow
+                  isFollowed={userInfo?.is_followed}
+                  className="py-1 px-8"
+                  onClick={handleFollow}
+                />
               </AuthLogin>
             </div>
             <div className="font-bold text-lg">
-              {data?.full_name || fullname}
+              {userInfo?.full_name || fullname}
             </div>
-            <div className="text-sm">{data?.nickname}</div>
+            <div className="text-sm">{userInfo?.nickname}</div>
             <div className="flex mt-1">
               <div className="mr-3">
-                <span className="font-semibold">{data?.followers_count}</span>{" "}
+                <span className="font-semibold">
+                  {userInfo?.followers_count}
+                </span>{" "}
                 <span className="text-gray-400">
-                  {data?.followers_count > 1 ? "Followers" : "Follow"}
+                  {userInfo?.followers_count > 1 ? "Followers" : "Follow"}
                 </span>
               </div>
               <div>
-                <span className="font-semibold">{data?.likes_count}</span>{" "}
+                <span className="font-semibold">{userInfo?.likes_count}</span>{" "}
                 <span className="text-gray-400">
-                  {data?.likes_count > 1 ? "Likes" : "Like"}
+                  {userInfo?.likes_count > 1 ? "Likes" : "Like"}
                 </span>
               </div>
             </div>
-            {data?.bio && <div className="text-sm mt-4">{data?.bio}</div>}
+            {userInfo?.bio && (
+              <div className="text-sm mt-4">{userInfo?.bio}</div>
+            )}
           </div>
         }
         delay={[800, 0]}

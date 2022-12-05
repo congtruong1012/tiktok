@@ -2,13 +2,17 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { userStorage } from "../../containers/Features/User/reducer";
 import { AuthLogin } from "../../containers/HOCs/AuthLogin";
 import IconVerified from "../../icons/IconVerified";
 import { suggestAccounts } from "../../services/suggestAccounts";
 import Image from "../Layout/Image";
 import LoadingTikTok from "../Layout/Skeleton/LoadingTiktok";
 function SuggestAccountNonLogin() {
+  const dispatch = useDispatch();
+
   const { isLoading, hasNextPage, data, isFetchingNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["suggest-account-nonlogin"],
@@ -16,6 +20,17 @@ function SuggestAccountNonLogin() {
       getNextPageParam: (params) => {
         const { current_page, total_pages } = params?.meta?.pagination || {};
         return current_page < total_pages ? current_page + 1 : undefined;
+      },
+      onSuccess: (data) => {
+        const byId = {};
+        let allIds = [];
+        data?.pages?.forEach((page) => {
+          allIds = page?.data?.map((item) => item?.id || "") || [];
+          page?.data.forEach((item) => {
+            byId[item?.id] = item;
+          });
+        });
+        dispatch(userStorage({ byId, allIds }));
       },
     });
   const { ref, inView } = useInView();

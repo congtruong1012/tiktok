@@ -1,44 +1,63 @@
-import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow, isValid } from "date-fns";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import { makeSelectUserInfo } from "../../containers/Features/User/reducer";
 import { AuthLogin } from "../../containers/HOCs/AuthLogin";
 import HoverCard from "../../containers/HOCs/HoverCard";
-import useSafeState from "../../hooks/useSafeState";
-import { useViewPort } from "../../hooks/useViewPort";
+import ModalVideoDetail from "../../containers/HOCs/ModalVideoDetail";
+import useFollowUser from "../../hooks/useFllowUser";
+import useLikeVideo from "../../hooks/useLikeVideo";
 import IconComment from "../../icons/IconComment";
 import IconHeart from "../../icons/IconHeart";
 import IconShared from "../../icons/IconShared";
-import { followAccount, unfollowAccount } from "../../services/followAccount";
+import ButtonFollow from "../ButtonFollow";
 import Image from "../Layout/Image";
 import Video from "../Video";
 // import PropTypes from 'prop-types'
 
 function Post(props) {
-  const { video: defaultaVideo } = props;
-  const [video, setVideo] = useSafeState(defaultaVideo);
+  const { video } = props;
+  const ref = useRef();
+  const userInfo = useSelector((state) =>
+    makeSelectUserInfo(state, video?.user?.id)
+  );
+
   const { pathname } = useLocation();
-  const { mutate: mutateFollow } = useMutation({
-    mutationFn: followAccount,
-    onSuccess: (rs) => setVideo((prev) => ({ ...prev, user: rs })),
+
+  const { handleFollow } = useFollowUser({
+    userId: userInfo?.id,
+    status: userInfo?.is_followed,
   });
 
-  const { mutate: mutateUnfollow } = useMutation({
-    mutationFn: unfollowAccount,
-    onSuccess: (rs) => setVideo((prev) => ({ ...prev, user: rs })),
+  const { handleLikeVideo } = useLikeVideo({
+    videoId: video?.id,
+    status: video?.is_liked,
+    onSuccess: (rs) => {
+      Object.assign(video, rs);
+    },
   });
+
   const reactions = [
     {
-      icon: IconHeart,
+      icon: (
+        <IconHeart
+          className={`w-6 h-6 ${video?.is_liked ? "text-primary" : ""}`}
+          onClick={handleLikeVideo}
+        />
+      ),
       num: video?.likes_count || 0,
-      className: `${video?.is_liked ? "bg-red-400" : ""}`,
     },
     {
-      icon: IconComment,
+      icon: (
+        <ModalVideoDetail Component="span" video={video} ref={ref}>
+          <IconComment className={`w-6 h-6 `} />
+        </ModalVideoDetail>
+      ),
       num: video?.comments_count || 0,
     },
     {
-      icon: IconShared,
+      icon: <IconShared fill="#000" />,
       num: "Share",
     },
   ];
@@ -49,11 +68,8 @@ function Post(props) {
         <div className="w-14 h-14 rounded-full overflow-hidden">
           <HoverCard
             Component={Image}
-            userId={video?.user?.nickname}
-            cbSuccess={(rs) => {
-              setVideo((prev) => ({ ...prev, user: rs }));
-            }}
-            src={video?.user?.avatar}
+            userId={userInfo?.nickname}
+            src={userInfo?.avatar}
             alt="user"
             className="w-full h-full object-cover"
           />
@@ -64,19 +80,16 @@ function Post(props) {
           <div className="flex-grow">
             <HoverCard
               Component={Link}
-              userId={video?.user?.nickname}
-              cbSuccess={(rs) => {
-                setVideo((prev) => ({ ...prev, user: rs }));
-              }}
+              userId={userInfo?.nickname}
               className="flex items-center "
-              to={`/profile/@${video?.user?.nickname}`}
+              to={`/profile/@${userInfo?.nickname}`}
             >
-              <h5 className="text-lg font-bold mr-2 hover:underline">{`${video?.user?.first_name} ${video?.user?.last_name}`}</h5>
-              {video?.user?.nickname && (
+              <h5 className="text-lg font-bold mr-2 hover:underline">{`${userInfo?.first_name} ${userInfo?.last_name}`}</h5>
+              {userInfo?.nickname && (
                 <div className="text-gray-600">
                   <span> · </span>
                   <span className="text-sm font-semibold ">
-                    {video?.user?.nickname}
+                    {userInfo?.nickname}
                   </span>
                 </div>
               )}
@@ -102,21 +115,11 @@ function Post(props) {
 
           {pathname !== "/following" && (
             <AuthLogin Component="div">
-              {video?.user?.is_followed ? (
-                <button
-                  onClick={() => mutateUnfollow(video?.user?.id)}
-                  className="rounded-lg px-3 py-1 hover:bg-gray-50 font-semibold border border-gray-200"
-                >
-                  Following
-                </button>
-              ) : (
-                <button
-                  onClick={() => mutateFollow(video?.user?.id)}
-                  className="rounded-lg px-3 py-1 hover:bg-red-50 text-primary font-semibold border border-primary"
-                >
-                  Follow
-                </button>
-              )}
+              <ButtonFollow
+                isFollowed={userInfo?.is_followed}
+                className="px-3 py-1 "
+                onClick={handleFollow}
+              />
             </AuthLogin>
           )}
         </div>
@@ -128,9 +131,7 @@ function Post(props) {
           <div className="w-1/2 flex flex-col justify-end pl-4">
             {reactions.map((item, i) => (
               <div
-                className={`text-center w-14 cursor-pointer my-2 ${
-                  item?.className || ""
-                }`}
+                className={`text-center w-14 cursor-pointer my-2`}
                 key={String(i)}
               >
                 {/* <button className="block mx-auto rounded-full p-3 text-center bg-slate-100">
@@ -139,12 +140,8 @@ function Post(props) {
                 <AuthLogin
                   Component="button"
                   className="block mx-auto rounded-full p-3 text-center bg-slate-100"
-                  onClick={() => console.log("Oke na")}
                 >
-                  <item.icon
-                    className={`w-6 h-6`}
-                    fill={item.num === "Share" ? "#000" : undefined}
-                  />
+                  {item.icon}
                 </AuthLogin>
                 <div className="text-sm font-bold mt-1">{item.num}</div>
               </div>
