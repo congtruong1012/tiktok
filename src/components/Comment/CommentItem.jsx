@@ -42,14 +42,17 @@ function CommentItem(props) {
 
   return (
     <div className="flex space-x-4">
-      <div className="w-10 h-10 rounded-full overflow-hidden">
+      <Link
+        to={`/profile/${userInfo?.nickname}`}
+        className="inline-block w-10 h-10 rounded-full overflow-hidden"
+      >
         <HoverCard
           Component={Image}
           userId={userInfo?.nickname}
           className="w-full h-full cursor-pointer"
           src={userInfo?.avatar}
         ></HoverCard>
-      </div>
+      </Link>
       <div className="flex-grow">
         <div className="flex flex-col">
           <HoverCard

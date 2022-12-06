@@ -79,7 +79,7 @@ function Video(props) {
   return (
     <div
       ref={ref}
-      className="relative rounded-xl overflow-hidden video"
+      className="relative flex rounded-xl overflow-hidden video"
       style={{
         width: ratioVideo < 1 ? `calc(${sizeVideo}*${ratioVideo})` : "",
         height: ratioVideo > 1 ? `calc(${sizeVideo}/${ratioVideo})` : "",
@@ -95,6 +95,7 @@ function Video(props) {
         loop
         src={video?.file_url}
         ref={videoRef}
+        className="object-cover"
       />
       <span
         onClick={handleChange}

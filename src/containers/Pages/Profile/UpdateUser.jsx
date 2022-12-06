@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Image from "../../../components/Layout/Image";
 import Modal from "../../../components/Layout/Modal";
 import useToggle from "../../../hooks/useToggle";
@@ -22,7 +22,7 @@ function UpdateUser(props) {
   });
 
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
+  const nav = useNavigate();
 
   const {
     register,
@@ -73,7 +73,7 @@ function UpdateUser(props) {
       onSuccess: ({ data: rs }) => {
         dispatch(checkToken({ data: rs, isLogin: true }));
         dispatch(updateUser({ id: [rs?.id], byId: rs }));
-        window.history.replaceState({}, {}, `profile/@${rs?.nickname}`);
+        nav(`/profile/@${rs?.nickname}`);
         handleClose();
       },
     });
@@ -244,7 +244,5 @@ function UpdateUser(props) {
     </>
   );
 }
-
-UpdateUser.propTypes = {};
 
 export default UpdateUser;

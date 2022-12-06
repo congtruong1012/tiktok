@@ -67,7 +67,10 @@ function Post(props) {
   return (
     <div className="flex py-5 border-b">
       <div className="flex-shrink-0 flex-grow-0 mr-2">
-        <div className="w-14 h-14 rounded-full overflow-hidden">
+        <Link
+          to={`/profile/@${userInfo?.nickname}`}
+          className="inline-block w-14 h-14 rounded-full overflow-hidden cursor-pointer"
+        >
           <HoverCard
             Component={Image}
             userId={userInfo?.nickname}
@@ -75,7 +78,7 @@ function Post(props) {
             alt="user"
             className="w-full h-full object-cover"
           />
-        </div>
+        </Link>
       </div>
       <div className="px-2 flex-grow">
         <div className="flex">

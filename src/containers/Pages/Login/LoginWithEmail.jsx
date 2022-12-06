@@ -34,14 +34,7 @@ function LoginWithEmail({ onClick }) {
         const user = data?.data;
         dispatch(
           checkToken({
-            data: {
-              fullname:
-                user?.full_name || `${user?.first_name} ${user?.last_name}`,
-              email: user?.email,
-              avatar: user?.avatar,
-              isVerified: user?.tick,
-              nickname: user?.nickname,
-            },
+            data: user,
             isLogin: true,
           })
         );

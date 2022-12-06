@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import ButtonFollow from "../../../components/ButtonFollow";
 import Image from "../../../components/Layout/Image";
 import useFollowUser from "../../../hooks/useFllowUser";
@@ -57,9 +58,12 @@ function HoverCard(props) {
         content={
           <div className="bg-white w-[320px] p-4 shadow-md">
             <div className="flex justify-between mb-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
+              <Link
+                to={`/profile/@${userInfo?.nickname}`}
+                className="w-10 h-10 rounded-full overflow-hidden"
+              >
                 <Image src={userInfo?.avatar} className="w-full h-full" />
-              </div>
+              </Link>
               <AuthLogin Component="div">
                 <ButtonFollow
                   isFollowed={userInfo?.is_followed}
@@ -68,9 +72,12 @@ function HoverCard(props) {
                 />
               </AuthLogin>
             </div>
-            <div className="font-bold text-lg">
+            <Link
+              to={`/profile/@${userInfo?.nickname}`}
+              className="font-bold text-lg hover:underline"
+            >
               {userInfo?.full_name || fullname}
-            </div>
+            </Link>
             <div className="text-sm">{userInfo?.nickname}</div>
             <div className="flex mt-1">
               <div className="mr-3">

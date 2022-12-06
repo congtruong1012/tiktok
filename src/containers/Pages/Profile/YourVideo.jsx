@@ -1,11 +1,14 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { isError, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import React from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import IconPlay from "../../../icons/IconPlay";
+import IconUser from "../../../icons/IconUser";
 import { getAnUser } from "../../../services/userService";
 import { getUserVideo } from "../../../services/videoService";
+import NoDataProfile from "./NoDataProfile";
 import VideoInProfile from "./VideoInProfile";
 
 function YourVideo() {
@@ -21,14 +24,13 @@ function YourVideo() {
       queryFn: ({ pageParam = 1 }) => getUserVideo(profile?.id, pageParam),
       getNextPageParam: (params) => {
         const { current_page, total_pages } = params?.meta?.pagination || {};
-        console.log(
-          "aaaa",
-          current_page < total_pages ? current_page + 1 : undefined
-        );
         return current_page < total_pages ? current_page + 1 : undefined;
       },
       enabled: !!profile?.id,
     });
+
+  const userLogin = useSelector((state) => state.app.user);
+
   const passProps = {
     isLoading,
     hasNextPage,
@@ -36,7 +38,26 @@ function YourVideo() {
     isFetchingNextPage,
     fetchNextPage,
   };
-  return <VideoInProfile {...passProps} />;
+  return (
+    <>
+      <VideoInProfile {...passProps} />
+      {data?.pages[0]?.data?.length === 0 && (
+        <NoDataProfile
+          className="mt-10"
+          title={
+            userLogin?.id === profile?.id
+              ? "Upload your first video"
+              : `No content`
+          }
+          description={
+            userLogin?.id === profile?.id
+              ? "Your videos will appear here"
+              : `This user has not published any videos.`
+          }
+        />
+      )}
+    </>
+  );
 }
 
 export default YourVideo;

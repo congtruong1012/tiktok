@@ -34,7 +34,7 @@ function VideoInProfile(props) {
                 <React.Fragment key={item?.id}>
                   <div className="relative">
                     <HoverVideoPlayer
-                      className="w-full h-[269px] rounded-lg"
+                      className="w-full h-[269px] rounded-lg overflow-hidden"
                       videoClassName="w-full h-full object-cover"
                       videoSrc={item?.file_url}
                       restartOnPaused

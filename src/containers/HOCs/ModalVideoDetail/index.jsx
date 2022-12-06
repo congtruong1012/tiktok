@@ -1,13 +1,14 @@
 import { format } from "date-fns";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ButtonFollow from "../../../components/ButtonFollow";
 import Image from "../../../components/Layout/Image";
 import Modal from "../../../components/Layout/Modal";
 import useFollowUser from "../../../hooks/useFllowUser";
 import useLikeVideo from "../../../hooks/useLikeVideo";
+import { useMounted } from "../../../hooks/useSafeState";
 import useToggle from "../../../hooks/useToggle";
 import IconCircleXMark from "../../../icons/IconCircleXMark";
 import IconClose from "../../../icons/IconClose";
@@ -19,6 +20,9 @@ import { makeSelectUserInfo } from "../../Features/User/reducer";
 import HoverCard from "../HoverCard";
 import ModalComment from "./ModalComment";
 import VideoDetail from "./VideoDetail";
+
+const modalRoot = document.createElement("div");
+modalRoot.className = "modal-root";
 
 function ModalVideoDetail(props, ref) {
   const { Component, callback = {}, video, ...rest } = props;
@@ -49,6 +53,8 @@ function ModalVideoDetail(props, ref) {
     handleClose();
   };
 
+  useLayoutEffect(() => () => (document.body.style.overflowY = "auto"), []);
+
   useEffect(() => {
     if (open) {
       if (typeof cbOpen === "function") cbOpen();
@@ -64,7 +70,11 @@ function ModalVideoDetail(props, ref) {
       <Component onClick={onOpen} {...rest} ref={ref} />
       {open &&
         createPortal(
-          <div className={`fixed inset-0 z-[999] animate-fade overflow-hidden`}>
+          <div
+            className={`fixed inset-0 z-[999] animate-fade overflow-hidden ${
+              open ? "modal-open" : ""
+            }`}
+          >
             <div
               onClick={onClose}
               className="absolute inset-0"

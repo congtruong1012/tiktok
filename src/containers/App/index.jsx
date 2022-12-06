@@ -10,6 +10,7 @@ import { getCurrentUser } from "../../services/authService";
 import Following from "../Pages/Following";
 import Home from "../Pages/Home";
 import Login from "../Pages/Login";
+import NotFound from "../Pages/NotFound";
 import Profile from "../Pages/Profile";
 import { checkToken } from "./reducer";
 
@@ -72,14 +73,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/following" element={<Following />} />
             <Route path="/profile/:id" element={<Profile />} />
-            <Route
-              path="*"
-              element={
-                <CommonLayout>
-                  <div>Không tìm thấy </div>
-                </CommonLayout>
-              }
-            />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       )}
