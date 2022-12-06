@@ -4,7 +4,7 @@ import CommentItem from "../../../components/Comment/CommentItem";
 import ListComment from "../../../components/Comment/ListComment";
 import Image from "../../../components/Layout/Image";
 import Scrollbar from "../../../components/Layout/Scrollbar";
-import IconArrowDown from "../../../icons/IconArrowDown";
+import IconArrowDown from "../../../icons/IconArrow";
 import IconEmoji from "../../../icons/IconEmoji";
 import IconTag from "../../../icons/IconTag";
 

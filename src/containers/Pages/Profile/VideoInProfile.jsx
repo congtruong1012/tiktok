@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
+import Image from "../../../components/Layout/Image";
 import LoadingTikTok from "../../../components/Layout/Skeleton/LoadingTiktok";
 import IconPlay from "../../../icons/IconPlay";
+import ModalVideoDetail from "../../HOCs/ModalVideoDetail";
 
 function VideoInProfile(props) {
   const { isLoading, hasNextPage, data, isFetchingNextPage, fetchNextPage } =
@@ -14,6 +16,16 @@ function VideoInProfile(props) {
       fetchNextPage();
     }
   }, [inView]);
+
+  const videos = useMemo(() => {
+    const arr = [];
+    data?.pages.map((page) =>
+      page?.data?.forEach((item) => {
+        arr.push(item);
+      })
+    );
+    return arr;
+  }, [data]);
 
   return (
     <>
@@ -33,11 +45,23 @@ function VideoInProfile(props) {
               page?.data?.map((item) => (
                 <React.Fragment key={item?.id}>
                   <div className="relative">
-                    <HoverVideoPlayer
+                    <ModalVideoDetail
+                      Component={HoverVideoPlayer}
+                      video={item}
+                      videos={videos}
                       className="w-full h-[269px] rounded-lg overflow-hidden"
                       videoClassName="w-full h-full object-cover"
                       videoSrc={item?.file_url}
                       restartOnPaused
+                      pausedOverlay={
+                        <>
+                          <Image
+                            className="w-full h-full object-cover overflow-hidden"
+                            src={item?.thumb_url}
+                            loading="lazy"
+                          />
+                        </>
+                      }
                     />
                     <div className="line-clamp-1">{item?.description}</div>
                     <div className="absolute bottom-0 left-2">

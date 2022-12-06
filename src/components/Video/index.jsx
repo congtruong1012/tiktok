@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 import { makeSelectVideoInfo } from "../../containers/Features/Video/reducer";
@@ -8,14 +10,16 @@ import IconMute from "../../icons/IconMute";
 import IconPause from "../../icons/IconPause";
 import IconPlay from "../../icons/IconPlay";
 import IconUnmute from "../../icons/IconUnmute";
-// import PropTypes from 'prop-types'
+import Image from "../Layout/Image";
 
-// const sizeWidth = "w-[calc(450px + ((100vw - 760px) / 1152) * 100)]";
-// const sizeHeight = "h-[calc(450px + ((100vw - 760px) / 1152) * 100)]";
 const sizeVideo = "calc(450px + ((100vw - 760px) / 1152) * 100)";
 
 function Video(props) {
-  const { video } = props;
+  const { video, type } = props;
+
+  const { data } = useInfiniteQuery({
+    queryKey: ["videos", type],
+  });
 
   const [volume, setVolume] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -76,6 +80,16 @@ function Video(props) {
     // setClassSize(ratio < 1 ? sizeHeight : sizeWidth);
   }, []);
 
+  const videos = useMemo(() => {
+    const arr = [];
+    data?.pages.map((page) =>
+      page?.data?.forEach((item) => {
+        arr.push(item);
+      })
+    );
+    return arr;
+  }, [data]);
+
   return (
     <div
       ref={ref}
@@ -86,16 +100,28 @@ function Video(props) {
       }}
     >
       <ModalVideoDetail
-        Component="video"
+        Component={HoverVideoPlayer}
         video={video}
+        videos={videos}
         callback={{
           cbOpen: () => videoRef.current.pause(),
           cbClose: () => videoRef.current.play(),
         }}
+        videoClassName="object-cover"
         loop
-        src={video?.file_url}
-        ref={videoRef}
-        className="object-cover"
+        videoSrc={video?.file_url}
+        videoRef={videoRef}
+        focused={inView} // video focus then play video
+        disableDefaultEventHandling
+        pausedOverlay={
+          <>
+            <Image
+              className="w-full h-full object-cover overflow-hidden"
+              src={video?.thumb_url}
+              loading="lazy"
+            />
+          </>
+        }
       />
       <span
         onClick={handleChange}
@@ -134,69 +160,3 @@ function Video(props) {
 Video.propTypes = {};
 
 export default Video;
-
-/*
-
-const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0);
-
-  const ref = useRef(null);
-  const volumeRef = useRef(null);
-  const prevVolume = useRef(volume);
-
-  const isShow = useViewPort(ref, {
-    root: null,
-    rootMargin: "-10%",
-    threshold: 0.6,
-  });
-
-  const handleChange = () => {
-    setIsPlaying((prev) => {
-      if (prev) ref.current.pause();
-      else ref.current.play();
-      return !prev;
-    });
-  };
-
-  const handleChangeVolume = (e) => {
-    const value = +e.target.value;
-    volumeRef.current.style.setProperty("--value", `${value}%`);
-    ref.current.volume = value / 100;
-    setVolume(value);
-  };
-
-  const handleChangeMaximun = () => {
-    let value;
-    if (volume > 0) {
-      prevVolume.current = volume;
-      value = 0;
-    } else value = prevVolume.current;
-    volumeRef.current.style.setProperty("--value", `${value}%`);
-    ref.current.volume = value / 100;
-    setVolume(value);
-  };
-
-  useEffect(() => {
-    if (ref.current) {
-      const currentVolume = ref.current.volume * 100;
-      setVolume(currentVolume);
-      volumeRef.current.style.setProperty("--value", `${currentVolume}%`);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (ref.current && isShow) {
-      if (!isPlaying) {
-        ref.current.muted = true;
-        ref.current.play();
-        ref.current.muted = false;
-        setIsPlaying(true);
-      }
-    } else {
-      if (isPlaying) {
-        setIsPlaying(false);
-        ref.current.pause();
-      }
-    }
-  }, [isShow]);
-*/

@@ -1,16 +1,23 @@
 import Tippy from "@tippyjs/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "../../../components/Layout/Image";
 import useToggle from "../../../hooks/useToggle";
+import {
+  default as IconArrow,
+  default as IconArrowDown,
+} from "../../../icons/IconArrow";
 import IconMute from "../../../icons/IconMute";
 import IconPlay from "../../../icons/IconPlay";
 import IconTikTok from "../../../icons/IconTikTok";
 import IconUnmute from "../../../icons/IconUnmute";
 
 function VideoDetail(props) {
-  const { video } = props;
-  const [play, onOpen, onClose, handleToggle] = useToggle(true);
+  const { video, videos, currentIndex, setCurrentIndex } = props;
+
+  const [play, onPlay, onPause, handleToggle] = useToggle(true);
+
   const [volume, setVolume] = useState(0);
+
   const ref = useRef();
   const prevVolume = useRef();
 
@@ -39,7 +46,11 @@ function VideoDetail(props) {
     } else {
       ref.current.pause();
     }
-  }, [play]);
+  }, [play, currentIndex]);
+
+  useEffect(() => {
+    onPlay();
+  }, [currentIndex]);
 
   return (
     <>
@@ -81,6 +92,26 @@ function VideoDetail(props) {
             <IconPlay className="w-14 h-14 text-white" />
           </span>
         )}
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 z-[101]">
+          <div className="flex flex-col space-y-6">
+            {currentIndex > 0 && (
+              <button
+                onClick={() => setCurrentIndex((prev) => prev - 1)}
+                className="w-10 h-10 flex justify-center items-center bg-[#54545480] hover:bg-black-100 rounded-full"
+              >
+                <IconArrow className="w-8 h-8 -rotate-90" fill="#fff" />
+              </button>
+            )}
+            {currentIndex + 1 !== videos?.length && (
+              <button
+                onClick={() => setCurrentIndex((prev) => prev + 1)}
+                className="w-10 h-10 flex justify-center items-center bg-[#54545480] hover:bg-black-100 rounded-full"
+              >
+                <IconArrow className="w-8 h-8 rotate-90" fill="#fff" />
+              </button>
+            )}
+          </div>
+        </div>
         <div
           style={{
             backgroundImage: `url(${video?.thumb_url})`,

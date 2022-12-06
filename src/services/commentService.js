@@ -1,7 +1,6 @@
 import httpRequest from "../utils/httpRequest";
 
 export const listComments = async (videoId, page, per_page = 10) => {
-  console.log("listComments  page", page);
   try {
     const res = await httpRequest.get(`videos/${videoId}/comments`, {
       params: {

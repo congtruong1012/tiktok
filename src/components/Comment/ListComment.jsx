@@ -1,5 +1,5 @@
 import React from "react";
-import IconArrowDown from "../../icons/IconArrowDown";
+import IconArrowDown from "../../icons/IconArrow";
 import CommentItem from "./CommentItem";
 
 function ListComment(props) {

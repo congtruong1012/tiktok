@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -25,9 +25,22 @@ const modalRoot = document.createElement("div");
 modalRoot.className = "modal-root";
 
 function ModalVideoDetail(props, ref) {
-  const { Component, callback = {}, video, ...rest } = props;
+  const {
+    Component,
+    callback = {},
+    video: initVideo,
+    videos = [],
+    ...rest
+  } = props;
   const { cbOpen, cbClose } = callback;
   const [open, handleOpen, handleClose] = useToggle();
+
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const index = videos?.findIndex((item) => item?.id === initVideo?.id);
+    return index > -1 ? index : 0;
+  });
+
+  const video = useMemo(() => videos?.[currentIndex], [currentIndex, videos]);
 
   const userInfo = useSelector((state) =>
     makeSelectUserInfo(state, video?.user?.id)
@@ -88,7 +101,12 @@ function ModalVideoDetail(props, ref) {
             </button>
             <div className="absolute z-10 flex w-screen h-screen">
               <div className="flex-grow flex-shrink ">
-                <VideoDetail video={video} />
+                <VideoDetail
+                  video={video}
+                  videos={videos}
+                  currentIndex={currentIndex}
+                  setCurrentIndex={setCurrentIndex}
+                />
               </div>
               <div className="flex w-[544px] bg-white h-full">
                 <div className="flex flex-col w-full">
@@ -128,16 +146,6 @@ function ModalVideoDetail(props, ref) {
                         </div>
                       </div>
                       <div>
-                        {/* <button
-                          onClick={handleFollow}
-                          className={`${
-                            userInfo?.is_followed
-                              ? "border-gray-300 hover:bg-stone-50 "
-                              : "border-primary text-primary hover:bg-red-50"
-                          }   rounded-lg py-1 px-8 font-semibold border border-solid `}
-                        >
-                          {userInfo?.is_followed ? "Following" : "Follow"}
-                        </button> */}
                         <ButtonFollow
                           isFollowed={userInfo?.is_followed}
                           className="py-1 px-8"

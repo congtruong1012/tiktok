@@ -16,6 +16,7 @@ function Profile() {
   const { isError } = useQuery({
     queryKey: ["profile", id],
   });
+  console.log('Profile  isError', isError);
   return (
     <CommonLayout>
       <div className="flex flex-col space-y-6">
