@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
-import Image from "../../../components/Layout/Image";
-import LoadingTikTok from "../../../components/Layout/Skeleton/LoadingTiktok";
-import IconPlay from "../../../icons/IconPlay";
-import ModalVideoDetail from "../../HOCs/ModalVideoDetail";
+import Image from "../Layout/Image";
+import LoadingTikTok from "../Layout/Skeleton/LoadingTiktok";
+import IconPlay from "../../icons/IconPlay";
+import ModalVideoDetail from "../../containers/HOCs/ModalVideoDetail";
 
 function VideoInProfile(props) {
   const { isLoading, hasNextPage, data, isFetchingNextPage, fetchNextPage } =

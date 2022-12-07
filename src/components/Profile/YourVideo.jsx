@@ -4,11 +4,9 @@ import HoverVideoPlayer from "react-hover-video-player";
 import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import IconPlay from "../../../icons/IconPlay";
-import IconUser from "../../../icons/IconUser";
-import { getAnUser } from "../../../services/userService";
-import { getUserVideo } from "../../../services/videoService";
 import NoDataProfile from "./NoDataProfile";
+import { getAnUser } from "../../services/userService";
+import { getUserVideo } from "../../services/videoService";
 import VideoInProfile from "./VideoInProfile";
 
 function YourVideo() {

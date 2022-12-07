@@ -28,7 +28,7 @@ function CommentInput(props) {
   return (
     <>
       {/* Add comment */}
-      <div className="flex space-x-6 px-8 py-5 border-t border-solid border-gray-300">
+      <div className="flex space-x-6">
         <div className="relative flex-grow">
           <form onSubmit={handleAddComment}>
             <input
@@ -48,7 +48,7 @@ function CommentInput(props) {
           </div>
         </div>
         <button
-          disabled={status === 'loading'}
+          disabled={status === "loading"}
           onClick={handleAddComment}
           className="text-sm text-primary disabled:text-gray-300"
         >

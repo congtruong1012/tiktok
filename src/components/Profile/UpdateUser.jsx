@@ -4,13 +4,13 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import Image from "../../../components/Layout/Image";
-import Modal from "../../../components/Layout/Modal";
-import useToggle from "../../../hooks/useToggle";
-import IconEdit from "../../../icons/IconEdit";
-import { updateCurrentUser } from "../../../services/authService";
-import { checkToken } from "../../App/reducer";
-import { updateUser } from "../../Features/User/reducer";
+import { checkToken } from "../../containers/App/reducer";
+import { updateUser } from "../../containers/Features/User/reducer";
+import useToggle from "../../hooks/useToggle";
+import IconEdit from "../../icons/IconEdit";
+import { updateCurrentUser } from "../../services/authService";
+import Image from "../Layout/Image";
+import Modal from "../Layout/Modal";
 
 function UpdateUser(props) {
   const { open, handleClose, user } = props;

@@ -1,4 +1,4 @@
-import { formatDistanceToNow, isValid } from "date-fns";
+import { formatDistanceToNowStrict, isValid } from "date-fns";
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -104,7 +104,7 @@ function Post(props) {
                   {isValid(
                     new Date(videoInfo?.updated_at || videoInfo?.published_at)
                   ) &&
-                    formatDistanceToNow(
+                    formatDistanceToNowStrict(
                       new Date(
                         videoInfo?.updated_at || videoInfo?.published_at
                       ),

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import IconUser from "../../../icons/IconUser";
+import IconUser from "../../icons/IconUser";
 
 function NoDataProfile(props) {
   const { className, title, description } = props;

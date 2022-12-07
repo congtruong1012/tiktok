@@ -12,6 +12,7 @@ import Home from "../Pages/Home";
 import Login from "../Pages/Login";
 import NotFound from "../Pages/NotFound";
 import Profile from "../Pages/Profile";
+import VideoDetail from "../Pages/VideoDetail";
 import { checkToken } from "./reducer";
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/following" element={<Following />} />
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/video/:id" element={<VideoDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

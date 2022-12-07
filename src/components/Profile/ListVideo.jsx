@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import Tab from "../../../components/Layout/Tab";
+import Tab from "../Layout/Tab";
 import VideoLiked from "./VideoLiked";
 import YourVideo from "./YourVideo";
 

@@ -27,23 +27,20 @@ function HoverCard(props) {
     status: userInfo?.is_followed,
   });
 
-  const deboundceMouseEnter = useCallback(
-    debounce(() => {
-      mutate(`@${userId}`, {
-        onSuccess: (rs) => {
-          dispatch(
-            userStorage({
-              allIds: [rs?.id],
-              byId: {
-                [rs?.id]: rs,
-              },
-            })
-          );
-        },
-      });
-    }, 500),
-    []
-  );
+  const deboundceMouseEnter = () => {
+    mutate(`@${userId}`, {
+      onSuccess: (rs) => {
+        dispatch(
+          userStorage({
+            allIds: [rs?.id],
+            byId: {
+              [rs?.id]: rs,
+            },
+          })
+        );
+      },
+    });
+  };
 
   const onMouseEnter = () => {
     deboundceMouseEnter();

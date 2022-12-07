@@ -27,7 +27,7 @@ function VideoDetail(props) {
 
   useEffect(() => {
     const currentVolume =
-      (localStorage.getItem("volume") || videoRef.current.volume) * 100;
+      (localStorage.getItem("volume") || ref.current.volume) * 100;
     setVolume(currentVolume);
   }, []);
 

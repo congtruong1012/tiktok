@@ -71,7 +71,9 @@ function ModalComment(props) {
           )}
         </div>
       </Scrollbar>
-      <CommentInput queryKey="modal-comments" videoId={videoId} />
+      <div className="border-t border-solid border-gray-300 px-8 py-5">
+        <CommentInput queryKey="modal-comments" videoId={videoId} />
+      </div>
     </>
   );
 }

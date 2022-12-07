@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -16,6 +16,22 @@ import IconHeart from "../../icons/IconHeart";
 import IconMoreHorizontal from "../../icons/IconMoreHorizontal";
 import { deleteComment } from "../../services/commentService";
 import Image from "../Layout/Image";
+
+function IconLike({ isLiked, likesCount, handleLikeComment, vertical }) {
+  return (
+    <div
+      className={`flex items-center ${
+        vertical ? "space-x-2" : "flex-col  space-y-1"
+      } cursor-pointer`}
+    >
+      <IconHeart
+        onClick={handleLikeComment}
+        className={`w-5 h-5 ${isLiked ? "text-primary" : "text-black"}`}
+      />
+      <span>{likesCount}</span>
+    </div>
+  );
+}
 
 function CommentItem(props) {
   const { comment, queryKey, videoId } = props;
@@ -64,16 +80,24 @@ function CommentItem(props) {
             {`${userInfo?.first_name} ${comment?.user?.last_name}`}
           </HoverCard>
           <span className="text-base">{comment?.comment}</span>
-          <div className="flex space-x-6 my-1 text-gray-400 text-sm font-light">
-            <span>
-              {formatDistanceToNow(
+          <div className="flex items-center space-x-6 my-1  text-sm font-light">
+            <span className="text-gray-400">
+              {formatDistanceToNowStrict(
                 new Date(comment?.updated_at || comment?.created_at),
                 {
                   addSuffix: true,
                 }
               )}
             </span>
-            <button className="font-light">Reply</button>
+            {queryKey === "comments" && (
+              <IconLike
+                isLiked={comment?.is_liked}
+                likesCount={comment?.likes_count}
+                handleLikeComment={handleLikeComment}
+                vertical
+              />
+            )}
+            <button className="font-normal">Reply</button>
           </div>
         </div>
       </div>
@@ -101,15 +125,13 @@ function CommentItem(props) {
             </div>
           </Tippy>
         )}
-        <div className="text-center cursor-pointer">
-          <IconHeart
-            onClick={handleLikeComment}
-            className={`w-5 h-5 ${
-              comment?.is_liked ? "text-primary" : "text-black"
-            }`}
+        {queryKey === "modal-comments" && (
+          <IconLike
+            isLiked={comment?.is_liked}
+            likesCount={comment?.likes_count}
+            handleLikeComment={handleLikeComment}
           />
-          <span>{comment?.likes_count}</span>
-        </div>
+        )}
       </div>
     </div>
   );

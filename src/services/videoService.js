@@ -57,3 +57,12 @@ export const unlikeVideo = async (videoId) => {
     throw error;
   }
 };
+
+export const getVideo = async (videoId) => {
+  try {
+    const res = await httpRequest.get(`videos/${videoId}`);
+    return res?.data;
+  } catch (error) {
+    throw error;
+  }
+};

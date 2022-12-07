@@ -3,18 +3,21 @@ import Tippy from "@tippyjs/react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Image from "../../../components/Layout/Image";
-import useFollowUser from "../../../hooks/useFllowUser";
-import useToggle from "../../../hooks/useToggle";
-import IconEdit from "../../../icons/IconEdit";
-import IconFollowing from "../../../icons/IconFollowing";
-import IconLink from "../../../icons/IconLink";
-import IconMoreHorizontal from "../../../icons/IconMoreHorizontal";
-import IconShared from "../../../icons/IconShared";
-import IconUser from "../../../icons/IconUser";
-import IconVerified from "../../../icons/IconVerified";
-import { getAnUser } from "../../../services/userService";
-import { makeSelectUserInfo, userStorage } from "../../Features/User/reducer";
+import {
+  makeSelectUserInfo,
+  userStorage,
+} from "../../containers/Features/User/reducer";
+import useFollowUser from "../../hooks/useFllowUser";
+import useToggle from "../../hooks/useToggle";
+import IconEdit from "../../icons/IconEdit";
+import IconFollowing from "../../icons/IconFollowing";
+import IconLink from "../../icons/IconLink";
+import IconMoreHorizontal from "../../icons/IconMoreHorizontal";
+import IconShared from "../../icons/IconShared";
+import IconUser from "../../icons/IconUser";
+import IconVerified from "../../icons/IconVerified";
+import { getAnUser } from "../../services/userService";
+import Image from "../Layout/Image";
 import NoDataProfile from "./NoDataProfile";
 import UpdateUser from "./UpdateUser";
 

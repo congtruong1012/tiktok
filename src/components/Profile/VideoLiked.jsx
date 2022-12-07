@@ -3,9 +3,8 @@ import React from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import IconPlay from "../../../icons/IconPlay";
-import { getAnUser } from "../../../services/userService";
-import { getVideoLiked } from "../../../services/videoService";
+import { getAnUser } from "../../services/userService";
+import { getVideoLiked } from "../../services/videoService";
 import NoDataProfile from "./NoDataProfile";
 import VideoInProfile from "./VideoInProfile";
 

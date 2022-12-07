@@ -10,6 +10,9 @@
 :root{
   --sizeVideo: calc(450px + ((100vw - 760px) / 1152) * 100)
 }
+html,body{
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -18,7 +21,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
+ 
 }
 
 * {
