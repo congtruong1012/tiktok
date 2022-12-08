@@ -40,7 +40,7 @@ function VideoDetail() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ["modal-comments", id],
+    queryKey: ["comments", id],
     queryFn: ({ pageParam = 1 }) => listComments(id, pageParam),
     getNextPageParam: (params) => {
       const { current_page, total_pages } = params?.meta?.pagination || {};
@@ -175,6 +175,7 @@ function VideoDetail() {
                   key={String(index)}
                   comments={page?.data || []}
                   queryKey="comments"
+                  videoId={id}
                 />
               ))}
             </div>

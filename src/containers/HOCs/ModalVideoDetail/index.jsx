@@ -66,6 +66,23 @@ function ModalVideoDetail(props, ref) {
     handleClose();
   };
 
+  const handleCopy = (value) => {
+    // Get the text field
+    const copyText = document.createElement("input");
+    copyText.value = value;
+    // Select the text field
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(copyText.value);
+
+    // Alert the copied text
+    alert("Copied the text");
+
+    copyText.remove();
+  };
+
   useLayoutEffect(() => () => (document.body.style.overflowY = "auto"), []);
 
   useEffect(() => {
@@ -184,9 +201,14 @@ function ModalVideoDetail(props, ref) {
                     <div className="bg-gray-50 border border-solid border-gray-200 flex">
                       <p className=" pl-2 line-clamp-1 flex-1 text-sm my-2.5 text-gray-500">
                         {/* https://www.tiktok.com/@missgrand2021.thuytien/video/7171823844338978053?is_copy_url=1&is_from_webapp=v1 */}
-                        {`http://localhost:9652/@${video?.user?.nickname}/video/${video?.id}`}
+                        {`http://localhost:9652/video/${video?.id}`}
                       </p>
-                      <span className=" py-2.5 inline-block text-sm font-semibold px-4 cursor-pointer hover:bg-slate-100">
+                      <span
+                        onClick={() =>
+                          handleCopy(`http://localhost:9652/video/${video?.id}`)
+                        }
+                        className=" py-2.5 inline-block text-sm font-semibold px-4 cursor-pointer hover:bg-slate-100"
+                      >
                         Copy link
                       </span>
                     </div>

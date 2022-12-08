@@ -59,7 +59,7 @@ function Post(props) {
       num: video?.comments_count || 0,
     },
     {
-      icon: <IconShared fill="#000" />,
+      icon: <IconShared fill="#000" className={`w-6 h-6 `} />,
       num: "Share",
     },
   ];

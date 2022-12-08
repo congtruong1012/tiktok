@@ -93,10 +93,10 @@ function Video(props) {
   return (
     <div
       ref={ref}
-      className="relative flex rounded-xl overflow-hidden video"
+      className="relative flex rounded-xl overflow-hidden video h-full"
       style={{
-        width: ratioVideo < 1 ? `calc(${sizeVideo}*${ratioVideo})` : "",
-        height: ratioVideo > 1 ? `calc(${sizeVideo}/${ratioVideo})` : "",
+        maxWidth: ratioVideo < 1 ? `calc(${sizeVideo}*${ratioVideo})` : "",
+        maxHeight: ratioVideo > 1 ? `calc(${sizeVideo}/${ratioVideo})` : "",
       }}
     >
       <ModalVideoDetail
@@ -107,7 +107,7 @@ function Video(props) {
           cbOpen: () => videoRef.current.pause(),
           cbClose: () => videoRef.current.play(),
         }}
-        videoClassName="object-cover"
+        // videoClassName="object-cover"
         loop
         videoSrc={video?.file_url}
         videoRef={videoRef}
@@ -116,7 +116,7 @@ function Video(props) {
         pausedOverlay={
           <>
             <Image
-              className="w-full h-full object-cover overflow-hidden"
+              // className="w-full h-full object-cover overflow-hidden"
               src={video?.thumb_url}
               loading="lazy"
             />

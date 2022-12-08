@@ -17,7 +17,7 @@ function Video(props) {
   const { video } = props;
 
   const [open, onOpen, onClose] = useToggle();
-  const [play, onPlay, onPause, onTogglePlay] = useToggle();
+  const [play, onPlay, onPause, onTogglePlay] = useToggle(true);
 
   const { volume, handleChangeVolume, handleChangeMaximun, videoRef } =
     useVolume();
@@ -25,6 +25,15 @@ function Video(props) {
   const scrollToComments = () => {
     document.getElementById("comments")?.scrollIntoView();
   };
+
+  useEffect(() => {
+    videoRef.current.muted = !play;
+    if (play) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  }, [play]);
 
   return (
     <div
@@ -45,15 +54,18 @@ function Video(props) {
           ref={videoRef}
           muted
           loop
-          autoPlay
           className="h-full"
           src={video?.file_url}
         ></video>
       </div>
       {/* Icon Play center */}
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-        <IconPlay className="text-white w-10 h-10" />
-      </span>
+      <div onClick={onTogglePlay} className="absolute inset-0 z-[1]">
+        {!play && (
+          <span className="flex justify-center items-center w-full h-full">
+            <IconPlay className="text-white w-10 h-10" />
+          </span>
+        )}
+      </div>
       {/* Icon play or pause at edge */}
       {open && (
         <span
