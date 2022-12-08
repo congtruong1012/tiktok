@@ -18,7 +18,7 @@ import Video from "../Video";
 // import PropTypes from 'prop-types'
 
 function Post(props) {
-  const { video } = props;
+  const { video, type } = props;
   const ref = useRef();
 
   const userInfo = useSelector((state) =>
@@ -133,9 +133,9 @@ function Post(props) {
 
         <div className="flex my-2">
           {/* <div className="w-1/2"> */}
-          <Video {...props} video={videoInfo} />
+          <Video type={type} video={videoInfo} />
           {/* </div> */}
-          <div className="w-1/2 flex flex-col justify-end pl-4">
+          <div className="flex flex-col justify-end pl-4">
             {reactions.map((item, i) => (
               <div
                 className={`text-center w-14 cursor-pointer my-2`}

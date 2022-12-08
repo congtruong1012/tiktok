@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
+import debounce from "lodash.debounce";
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,7 +8,6 @@ import ButtonFollow from "../../../components/ButtonFollow";
 import Image from "../../../components/Layout/Image";
 import useFollowUser from "../../../hooks/useFllowUser";
 import { getAnUser } from "../../../services/userService";
-import debounce from "../../../utils/debounce";
 import { makeSelectUserInfo, userStorage } from "../../Features/User/reducer";
 import { AuthLogin } from "../AuthLogin";
 
@@ -27,24 +27,23 @@ function HoverCard(props) {
     status: userInfo?.is_followed,
   });
 
-  const deboundceMouseEnter = () => {
-    mutate(`@${userId}`, {
-      onSuccess: (rs) => {
-        dispatch(
-          userStorage({
-            allIds: [rs?.id],
-            byId: {
-              [rs?.id]: rs,
-            },
-          })
-        );
-      },
-    });
-  };
-
-  const onMouseEnter = () => {
-    deboundceMouseEnter();
-  };
+  const deboundceMouseEnter = useCallback(
+    debounce(() => {
+      mutate(`@${userId}`, {
+        onSuccess: (rs) => {
+          dispatch(
+            userStorage({
+              allIds: [rs?.id],
+              byId: {
+                [rs?.id]: rs,
+              },
+            })
+          );
+        },
+      });
+    }, 500),
+    []
+  );
 
   const fullname = `${userInfo?.first_name} ${userInfo?.last_name}`;
 
@@ -102,7 +101,7 @@ function HoverCard(props) {
       >
         <div
           style={{ width: "inherit", height: "inherit" }}
-          onMouseEnter={onMouseEnter}
+          onMouseEnter={deboundceMouseEnter}
         >
           <Component {...rest} />
         </div>

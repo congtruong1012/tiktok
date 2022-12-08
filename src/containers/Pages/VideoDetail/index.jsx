@@ -9,6 +9,8 @@ import CommentInput from "../../../components/Comment/CommentInput";
 import ListComment from "../../../components/Comment/ListComment";
 import CommonLayout from "../../../components/Layout/CommonLayout";
 import Image from "../../../components/Layout/Image";
+import SkeletonComment from "../../../components/Layout/Skeleton/SkeletonComment";
+import SkeletonUser from "../../../components/Layout/Skeleton/SkeletonUser";
 import useFollowUser from "../../../hooks/useFllowUser";
 import IconArrow from "../../../icons/IconArrow";
 import IconComment from "../../../icons/IconComment";
@@ -57,6 +59,7 @@ function VideoDetail() {
       });
       dispatch(userStorage({ byId, allIds }));
     },
+    
   });
 
   const { data: video, isLoadingVideo } = useQuery({
@@ -76,6 +79,7 @@ function VideoDetail() {
         })
       );
     },
+    
   });
 
   const videoInfo = useSelector((state) => makeSelectVideoInfo(state, id));
@@ -92,7 +96,10 @@ function VideoDetail() {
     <CommonLayout>
       <div className="flex flex-col space-y-4">
         {isLoadingVideo ? (
-          <div>Loading video ...</div>
+          <>
+            <div className="animate-pulse bg-slate-200 w-full h-[500px]"></div>
+            <SkeletonUser />
+          </>
         ) : (
           <>
             <Link to="/" className="flex space-x-4">
@@ -156,7 +163,7 @@ function VideoDetail() {
           </>
         )}
         {isLoadingComments ? (
-          <div>Loading comments ...</div>
+          <SkeletonComment />
         ) : (
           <>
             {/* Number Comment And Input */}

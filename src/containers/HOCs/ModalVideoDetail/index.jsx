@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import IconHeart from "../../../icons/IconHeart";
 import IconMusic from "../../../icons/IconMusic";
 import Comment from "../../Features/Comment";
 import { makeSelectUserInfo } from "../../Features/User/reducer";
+import { makeSelectVideoInfo } from "../../Features/Video/reducer";
 import HoverCard from "../HoverCard";
 import ModalComment from "./ModalComment";
 import VideoDetail from "./VideoDetail";
@@ -40,11 +41,15 @@ function ModalVideoDetail(props, ref) {
     return index > -1 ? index : 0;
   });
 
-  const video = useMemo(() => videos?.[currentIndex], [currentIndex, videos]);
+  const video = useMemo(
+    () => videos?.[currentIndex],
+    [currentIndex, videos]
+  );
 
   const userInfo = useSelector((state) =>
     makeSelectUserInfo(state, video?.user?.id)
   );
+  const videoInfo = useSelector((state) => makeSelectVideoInfo(state, video?.id));
   const isLogin = useSelector((state) => state.app?.isLogin);
 
   const { handleFollow } = useFollowUser({
@@ -53,8 +58,8 @@ function ModalVideoDetail(props, ref) {
   });
 
   const { handleLikeVideo } = useLikeVideo({
-    videoId: video?.id,
-    status: video?.is_liked,
+    videoId: videoInfo?.id,
+    status: videoInfo?.is_liked,
   });
 
   const onOpen = (e) => {
@@ -119,7 +124,7 @@ function ModalVideoDetail(props, ref) {
             <div className="absolute z-10 flex w-screen h-screen">
               <div className="flex-grow flex-shrink ">
                 <VideoDetail
-                  video={video}
+                  video={videoInfo}
                   videos={videos}
                   currentIndex={currentIndex}
                   setCurrentIndex={setCurrentIndex}
@@ -153,12 +158,20 @@ function ModalVideoDetail(props, ref) {
                           </span>
                           <span className="mx-1"> · </span>
                           <span className="font-normal text-sm">
-                            {format(
+                            {isValid(
                               new Date(
-                                video?.updated_at || video?.published_at
-                              ),
-                              "dd-MM"
-                            )}
+                                new Date(
+                                  video?.updated_at || video?.published_at
+                                )
+                              )
+                            )
+                              ? format(
+                                  new Date(
+                                    video?.updated_at || video?.published_at
+                                  ),
+                                  "dd-MM"
+                                )
+                              : ""}
                           </span>
                         </div>
                       </div>
@@ -171,41 +184,45 @@ function ModalVideoDetail(props, ref) {
                       </div>
                     </div>
                     {/* Description */}
-                    <div className="my-3">{video?.description}</div>
-                    {video?.music && (
+                    <div className="my-3">{videoInfo?.description}</div>
+                    {videoInfo?.music && (
                       <div className="flex items-center space-x-1 font-semibold cursor-pointer my-3 hover:underline">
                         <IconMusic className="w-5 h-5" />
-                        <span>{video?.music}</span>
+                        <span>{videoInfo?.music}</span>
                       </div>
                     )}
                     {/* Reaction */}
                     <div className="my-4 flex space-x-4">
-                      <div className="flex space-x-2 items-center cursor-pointer">
+                      <div
+                        onClick={handleLikeVideo}
+                        className="flex space-x-2 items-center cursor-pointer"
+                      >
                         <IconHeart
-                          onClick={handleLikeVideo}
                           className={`p-1.5 ${
-                            video?.is_liked ? "text-primary" : "text-black"
+                            videoInfo?.is_liked ? "text-primary" : "text-black"
                           } rounded-full bg-slate-100`}
                         />
                         <span className="text-xs font-semibold">
-                          {video?.likes_count}
+                          {videoInfo?.likes_count}
                         </span>
                       </div>
                       <div className="flex space-x-2 items-center cursor-pointer">
                         <IconComment className="p-1.5 bg-slate-100 rounded-full" />
                         <span className="text-xs font-semibold">
-                          {video?.comments_count}
+                          {videoInfo?.comments_count}
                         </span>
                       </div>
                     </div>
                     <div className="bg-gray-50 border border-solid border-gray-200 flex">
                       <p className=" pl-2 line-clamp-1 flex-1 text-sm my-2.5 text-gray-500">
                         {/* https://www.tiktok.com/@missgrand2021.thuytien/video/7171823844338978053?is_copy_url=1&is_from_webapp=v1 */}
-                        {`http://localhost:9652/video/${video?.id}`}
+                        {`http://localhost:9652/video/${videoInfo?.id}`}
                       </p>
                       <span
                         onClick={() =>
-                          handleCopy(`http://localhost:9652/video/${video?.id}`)
+                          handleCopy(
+                            `http://localhost:9652/video/${videoInfo?.id}`
+                          )
                         }
                         className=" py-2.5 inline-block text-sm font-semibold px-4 cursor-pointer hover:bg-slate-100"
                       >
@@ -213,7 +230,7 @@ function ModalVideoDetail(props, ref) {
                       </span>
                     </div>
                   </div>
-                  <ModalComment videoId={video?.id} />
+                  <ModalComment videoId={videoInfo?.id} />
                 </div>
               </div>
             </div>

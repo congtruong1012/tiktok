@@ -143,8 +143,8 @@ function ProfileInfo() {
             </span>
           </a>
           <div className="absolute top-0 left-[80%]">
-            <div className="flex space-x-4">
-              <IconShared className="cursor-pointer" />
+            <div className="flex items-center space-x-4">
+              <IconShared className="cursor-pointer fill-black" />
               <IconMoreHorizontal className="cursor-pointer" />
             </div>
           </div>

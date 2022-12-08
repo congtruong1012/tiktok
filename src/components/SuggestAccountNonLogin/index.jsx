@@ -10,6 +10,32 @@ import IconVerified from "../../icons/IconVerified";
 import { suggestAccounts } from "../../services/suggestAccounts";
 import Image from "../Layout/Image";
 import LoadingTikTok from "../Layout/Skeleton/LoadingTiktok";
+
+function UserInfo({ user }) {
+  return (
+    <div className="absolute w-[calc(100%+0.5px)] h-2/3 bottom-0 z-10 py-4">
+      <div className="w-full h-full text-center">
+        <div className="w-12 h-12 rounded-full overflow-hidden mx-auto">
+          <Image className="w-full h-full" src={user?.avatar} />
+        </div>
+        <div className="mt-2 font-bold text-white text-lg">
+          {`${user?.first_name} ${user?.last_name}`}
+        </div>
+        <span className="relative text-white text-sm">
+          <span>{user?.nickname}</span>
+          {user?.tick && <IconVerified className="absolute -right-4 top-0" />}
+        </span>
+        <AuthLogin
+          Component="button"
+          className="block mx-auto mt-3 text-white bg-primary py-1.5 px-10 rounded-lg font-semibold"
+        >
+          <span>Follow</span>
+        </AuthLogin>
+      </div>
+    </div>
+  );
+}
+
 function SuggestAccountNonLogin() {
   const dispatch = useDispatch();
 
@@ -67,6 +93,7 @@ function SuggestAccountNonLogin() {
                       className="w-[calc(100%+0.5px)] h-full rounded-xl overflow-hidden"
                       videoClassName="h-full object-cover"
                       videoSrc={item?.popular_video?.file_url}
+                      hoverOverlay={<UserInfo user={item} />}
                       pausedOverlay={
                         <>
                           <Image
@@ -74,32 +101,11 @@ function SuggestAccountNonLogin() {
                             src={item?.popular_video?.thumb_url}
                             loading="lazy"
                           />
+                          <UserInfo user={item} />
                         </>
                       }
                       restartOnPaused
                     />
-                    <div className="absolute w-[calc(100%+0.5px)] h-2/3 bottom-0 z-10 py-4">
-                      <div className="w-full h-full text-center">
-                        <div className="w-12 h-12 rounded-full overflow-hidden mx-auto">
-                          <Image className="w-full h-full" src={item?.avatar} />
-                        </div>
-                        <div className="mt-2 font-bold text-white text-lg">
-                          {`${item?.first_name} ${item?.last_name}`}
-                        </div>
-                        <span className="relative text-white text-sm">
-                          <span>{item?.nickname}</span>
-                          {item?.tick && (
-                            <IconVerified className="absolute -right-4 top-0" />
-                          )}
-                        </span>
-                        <AuthLogin
-                          Component="button"
-                          className="block mx-auto mt-3 text-white bg-primary py-1.5 px-10 rounded-lg font-semibold"
-                        >
-                          <span>Follow</span>
-                        </AuthLogin>
-                      </div>
-                    </div>
                   </div>
                 </Link>
               ))

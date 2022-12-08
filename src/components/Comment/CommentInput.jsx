@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  makeSelectVideoInfo,
+  updateVideo,
+} from "../../containers/Features/Video/reducer";
 import IconEmoji from "../../icons/IconEmoji";
 import IconTag from "../../icons/IconTag";
 import { createComment } from "../../services/commentService";
@@ -7,6 +12,11 @@ import { createComment } from "../../services/commentService";
 function CommentInput(props) {
   const { videoId, queryKey } = props;
   const inputRef = useRef();
+
+  const videoInfo = useSelector((state) => makeSelectVideoInfo(state, videoId));
+
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
     mutationFn: createComment,
@@ -21,7 +31,22 @@ function CommentInput(props) {
   const handleAddComment = (e) => {
     e.preventDefault();
     if (inputRef.current.value) {
-      mutate({ videoId, body: { comment: inputRef.current?.value } });
+      mutate(
+        { videoId, body: { comment: inputRef.current?.value } },
+        {
+          onSuccess: () => {
+            dispatch(
+              updateVideo({
+                id: videoId,
+                byId: {
+                  ...videoInfo,
+                  comments_count: videoInfo?.comments_count + 1,
+                },
+              })
+            );
+          },
+        }
+      );
     }
   };
 

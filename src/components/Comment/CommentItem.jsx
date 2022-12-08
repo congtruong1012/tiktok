@@ -7,9 +7,13 @@ import Tippy from "@tippyjs/react";
 import { formatDistanceToNowStrict } from "date-fns";
 import PropTypes from "prop-types";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { makeSelectUserInfo } from "../../containers/Features/User/reducer";
+import {
+  makeSelectVideoInfo,
+  updateVideo,
+} from "../../containers/Features/Video/reducer";
 import HoverCard from "../../containers/HOCs/HoverCard";
 import useLikeComment from "../../hooks/useLikeComment";
 import IconHeart from "../../icons/IconHeart";
@@ -39,12 +43,24 @@ function CommentItem(props) {
   const userInfo = useSelector((state) =>
     makeSelectUserInfo(state, comment?.user?.id)
   );
+  const videoInfo = useSelector((state) => makeSelectVideoInfo(state, videoId));
+
+  const dispatch = useDispatch();
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
       queryClient.invalidateQueries([queryKey, videoId]);
+      dispatch(
+        updateVideo({
+          id: videoId,
+          byId: {
+            ...videoInfo,
+            comments_count: videoInfo?.comments_count - 1,
+          },
+        })
+      );
     },
   });
 
