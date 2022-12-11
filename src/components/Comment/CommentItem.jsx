@@ -80,7 +80,8 @@ function CommentItem(props) {
       >
         <HoverCard
           Component={Image}
-          userId={userInfo?.nickname}
+          userId={userInfo?.id}
+          nickname={userInfo?.nickname}
           className="w-full h-full cursor-pointer"
           src={userInfo?.avatar}
         ></HoverCard>
@@ -90,7 +91,8 @@ function CommentItem(props) {
           <HoverCard
             Component={Link}
             to={`/profile/@${userInfo?.nickname}`}
-            userId={userInfo?.nickname}
+            userId={userInfo?.id}
+            nickname={userInfo?.nickname}
             className="text-lg font-bold inline-block hover:underline"
           >
             {`${userInfo?.first_name} ${comment?.user?.last_name}`}

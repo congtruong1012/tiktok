@@ -45,7 +45,8 @@ function SuggestAccount() {
                   Component={User}
                   key={String(user?.id || 0)}
                   user={user}
-                  userId={user?.nickname}
+                  userId={user?.id}
+                  nickname={user?.nickname}
                 />
                 // <User key={String(user?.id || 0)} user={user} />
               ))

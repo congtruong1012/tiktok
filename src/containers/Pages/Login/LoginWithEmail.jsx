@@ -43,9 +43,10 @@ function LoginWithEmail({ onClick }) {
         const eError = {
           422: "The given data was invalid.",
           401: "Incorrect account or password",
-          default: "Register failed",
+          default: "Login failed",
         };
         const code = error?.response?.status;
+        console.log('onSubmit  error', error);
         alert(eError[code || "default"]);
       },
     });

@@ -12,12 +12,14 @@ export function AuthLogin(props) {
   const [page, setPage] = useSafeState(0);
   const handleOpen = () => setOpen(true);
   const handleClose = (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setOpen(false);
   };
 
   const handleClick = (e) => {
-    e.stopPropagation();
     e.preventDefault();
+    e.stopPropagation();
     if (isLogin) {
       onClick();
     } else {
@@ -25,12 +27,14 @@ export function AuthLogin(props) {
     }
   };
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (e) => {
     handleClose();
     if (typeof onClick === "function") onClick();
   };
 
-  const changePage = () => {
+  const changePage = (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     setPage(page === 2 ? 1 : 2);
   };
 

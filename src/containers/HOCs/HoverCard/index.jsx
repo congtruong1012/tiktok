@@ -12,24 +12,25 @@ import { makeSelectUserInfo, userStorage } from "../../Features/User/reducer";
 import { AuthLogin } from "../AuthLogin";
 
 function HoverCard(props) {
-  const { Component, userId, ...rest } = props;
+  const { Component, userId, nickname, ...rest } = props;
 
   const dispatch = useDispatch();
 
-  const { data, mutate } = useMutation({
-    mutationFn: (nickname) => getAnUser(nickname),
+  const { mutate } = useMutation({
+    mutationKey: ["user", nickname],
+    mutationFn: getAnUser,
   });
 
-  const userInfo = useSelector((state) => makeSelectUserInfo(state, data?.id));
+  const userInfo = useSelector((state) => makeSelectUserInfo(state, userId));
 
   const { handleFollow } = useFollowUser({
     userId: userInfo?.id,
     status: userInfo?.is_followed,
   });
 
-  const deboundceMouseEnter = useCallback(
-    debounce(() => {
-      mutate(`@${userId}`, {
+  const onMouseEnter = () => {
+    if (!userInfo)
+      mutate(`@${nickname}`, {
         onSuccess: (rs) => {
           dispatch(
             userStorage({
@@ -41,9 +42,7 @@ function HoverCard(props) {
           );
         },
       });
-    }, 500),
-    []
-  );
+  };
 
   const fullname = `${userInfo?.first_name} ${userInfo?.last_name}`;
 
@@ -101,7 +100,7 @@ function HoverCard(props) {
       >
         <div
           style={{ width: "inherit", height: "inherit" }}
-          onMouseEnter={deboundceMouseEnter}
+          onMouseEnter={onMouseEnter}
         >
           <Component {...rest} />
         </div>

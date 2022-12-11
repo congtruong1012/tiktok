@@ -73,7 +73,8 @@ function Post(props) {
         >
           <HoverCard
             Component={Image}
-            userId={userInfo?.nickname}
+            userId={userInfo?.id}
+            nickname={userInfo?.nickname}
             src={userInfo?.avatar}
             alt="user"
             className="w-full h-full object-cover"
@@ -85,7 +86,8 @@ function Post(props) {
           <div className="flex-grow">
             <HoverCard
               Component={Link}
-              userId={userInfo?.nickname}
+              userId={userInfo?.id}
+              nickname={userInfo?.nickname}
               className="flex items-center "
               to={`/profile/@${userInfo?.nickname}`}
             >

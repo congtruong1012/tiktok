@@ -41,15 +41,14 @@ function ModalVideoDetail(props, ref) {
     return index > -1 ? index : 0;
   });
 
-  const video = useMemo(
-    () => videos?.[currentIndex],
-    [currentIndex, videos]
-  );
+  const video = useMemo(() => videos?.[currentIndex], [currentIndex, videos]);
 
   const userInfo = useSelector((state) =>
     makeSelectUserInfo(state, video?.user?.id)
   );
-  const videoInfo = useSelector((state) => makeSelectVideoInfo(state, video?.id));
+  const videoInfo = useSelector((state) =>
+    makeSelectVideoInfo(state, video?.id)
+  );
   const isLogin = useSelector((state) => state.app?.isLogin);
 
   const { handleFollow } = useFollowUser({
@@ -138,7 +137,8 @@ function ModalVideoDetail(props, ref) {
                       <HoverCard
                         Component="div"
                         className="w-12 h-12 overflow-hidden rounded-full"
-                        userId={`${userInfo?.nickname}`}
+                        userId={`${userInfo?.id}`}
+                        nickname={userInfo?.nickname}
                       >
                         <Image
                           src={userInfo?.avatar}
@@ -150,7 +150,8 @@ function ModalVideoDetail(props, ref) {
                           Component={Link}
                           to={`/profile/@${video?.user.nickname}`}
                           className="font-bold text-lg hover:underline"
-                          userId={`${userInfo?.nickname}`}
+                          userId={`${userInfo?.id}`}
+                          nickname={userInfo?.nickname}
                         >{`${userInfo?.first_name} ${userInfo?.last_name}`}</HoverCard>
                         <div className="flex items-center text-sm">
                           <span className="font-normal ">
@@ -216,12 +217,14 @@ function ModalVideoDetail(props, ref) {
                     <div className="bg-gray-50 border border-solid border-gray-200 flex">
                       <p className=" pl-2 line-clamp-1 flex-1 text-sm my-2.5 text-gray-500">
                         {/* https://www.tiktok.com/@missgrand2021.thuytien/video/7171823844338978053?is_copy_url=1&is_from_webapp=v1 */}
-                        {`http://localhost:9652/video/${videoInfo?.id}`}
+                        {`${import.meta.env.VITE_BASE_URL}/video/${videoInfo?.id}`}
                       </p>
                       <span
                         onClick={() =>
                           handleCopy(
-                            `http://localhost:9652/video/${videoInfo?.id}`
+                            `${import.meta?.env?.VITE_BASE_URL}/video/${
+                              videoInfo?.id
+                            }`
                           )
                         }
                         className=" py-2.5 inline-block text-sm font-semibold px-4 cursor-pointer hover:bg-slate-100"

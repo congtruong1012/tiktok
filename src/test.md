@@ -1,3 +1,1 @@
-- Click follow để login => Mở modal login => tắt thì link qua trang profile user
-- Hover card nhiều lần
 - Video theo chiều rộng chưa hiện thị đc hết chiều cao

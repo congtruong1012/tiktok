@@ -59,7 +59,6 @@ function VideoDetail() {
       });
       dispatch(userStorage({ byId, allIds }));
     },
-    
   });
 
   const { data: video, isLoadingVideo } = useQuery({
@@ -79,7 +78,6 @@ function VideoDetail() {
         })
       );
     },
-    
   });
 
   const videoInfo = useSelector((state) => makeSelectVideoInfo(state, id));
@@ -121,7 +119,8 @@ function VideoDetail() {
             <div className="flex space-x-4 border-t border-b border-gray-200 border-solid py-5">
               <HoverCard
                 Component="div"
-                userId={userInfo?.nickname}
+                userId={userInfo?.id}
+                nickname={userInfo?.nickname}
                 className="w-10 h-10 overflow-hidden rounded-full"
               >
                 <Image src={userInfo?.avatar} className="w-full h-full" />
@@ -129,7 +128,7 @@ function VideoDetail() {
               <div className="max-h-[145px]">
                 <HoverCard
                   Component={Link}
-                  userId={userInfo?.nickname}
+                  userId={userInfo?.id}
                   to={`/profile/@${userInfo?.nickname}`}
                   className="line-clamp-1 font-bold text-lg hover:underline"
                 >
