@@ -8,11 +8,11 @@ import { uiConfig } from "../../../utils/firebase";
 function LoginFireBase(props) {
   const { setPage } = props;
 
-  const handleSetPage = e => {
-     e.preventDefault();
-     e.stopPropagation();
-     setPage(1)
-  }
+  const handleSetPage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPage(1);
+  };
 
   return (
     <div className=" py-6 text-center">
@@ -32,11 +32,13 @@ function LoginFireBase(props) {
           <span>Use phone/email</span>
           <IconUser className="absolute top-1/2 -translate-y-1/2 left-4 text-xl" />
         </button>
-        <StyledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-          className="w-full"
-        />
+        {import.meta.env.MODE === "development" && (
+          <StyledFirebaseAuth
+            uiConfig={uiConfig}
+            firebaseAuth={firebase.auth()}
+            className="w-full"
+          />
+        )}
       </div>
     </div>
   );

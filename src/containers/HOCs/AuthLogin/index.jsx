@@ -18,8 +18,8 @@ export function AuthLogin(props) {
   };
 
   const handleClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e?.preventDefault();
+    e?.stopPropagation();
     if (isLogin) {
       onClick();
     } else {
