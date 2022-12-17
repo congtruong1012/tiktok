@@ -33,8 +33,10 @@ function ModalVideoDetail(props, ref) {
     videos = [],
     ...rest
   } = props;
+
   const { cbOpen, cbClose } = callback;
   const [open, handleOpen, handleClose] = useToggle();
+  if (open) console.log(import.meta.env, "aaaaaa");
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     const index = videos?.findIndex((item) => item?.id === initVideo?.id);
@@ -216,13 +218,14 @@ function ModalVideoDetail(props, ref) {
                     </div>
                     <div className="bg-gray-50 border border-solid border-gray-200 flex">
                       <p className=" pl-2 line-clamp-1 flex-1 text-sm my-2.5 text-gray-500">
-                        {/* https://www.tiktok.com/@missgrand2021.thuytien/video/7171823844338978053?is_copy_url=1&is_from_webapp=v1 */}
-                        {`${import.meta.env.VITE_BASE_URL}/video/${videoInfo?.id}`}
+                        {`${import.meta.env.VITE_BASE_URL}/video/${
+                          videoInfo?.id
+                        }`}
                       </p>
                       <span
                         onClick={() =>
                           handleCopy(
-                            `${import.meta?.env?.VITE_BASE_URL}/video/${
+                            `${import.meta.env.VITE_BASE_URL}/video/${
                               videoInfo?.id
                             }`
                           )
